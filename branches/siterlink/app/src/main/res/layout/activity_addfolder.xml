@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/mainGround">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/NormalTextSize"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:text="@string/choose_pic"
+            android:id="@+id/sle"/>
+
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="3"
+            android:background="@null"
+            android:layout_below="@id/sle"
+            android:id="@+id/icos"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/NormalTextSize"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:text="@string/folder_name"
+            android:id="@+id/ddd"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/ddd"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/foldername"
+            android:background="@null"
+            android:hint="@string/folder_input_hint"
+            android:textColorHint="@color/devices_offline"/>
+    </RelativeLayout>
+
+
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/common_btn_bg"
+        android:text="@string/dialog_btn_confim"
+        android:textColor="@color/white"
+        android:id="@+id/addFolder"/>
+</LinearLayout>

@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.siterwell.application">
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- 这个权限用于进行网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 这个权限用于进行获取网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 这个权限用于进行wifi组播 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <!-- 这些权限用于进行二维码扫描 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <!-- 这个权限用于进行配网时阻止屏幕休眠 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- 这个权限用于获取wifi的获取权限 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入用户数据 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- the following 2 com.xiaomi.mipushdemo should be changed to your package name -->
+    <permission
+        android:name="com.siterwell.siterlink.permission.MIPUSH_RECEIVE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="com.siterwell.siterlink.permission.MIPUSH_RECEIVE"/>
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        >
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher_alpha" />
+        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <activity
+            android:name="com.zbar.lib.ScanCaptureAct"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:label="主页面"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"
+            />
+        <activity
+            android:name=".RegisterActivity"
+            android:label="注册"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".InitActivity"
+            android:label="初始化"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".user.PersonalActivity"
+            android:label="个人设置"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".folder.DeviceListActivity"
+            android:label="设备列表"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".folder.guide.GuideBattery1Activty"
+            android:label="电池添加指导1"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".folder.guide.GuideBattery2Activty"
+            android:label="电池添加指导2"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".folder.guide.WaterSensor1Activity"
+            android:label="水感添加指导1"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".folder.guide.SocketGuide1Activity"
+            android:label="插座添加指导1"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".folder.configuration.ConfigurationActivity"
+            android:label="填写wifi密码"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".folder.configuration.EsptouchAnimationActivity"
+            android:label="wifi配置"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".folder.configuration.EsptouchSuccessActivity"
+            android:label="配网成功"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".folder.AddFolderActivity"
+            android:label="添加目录功能"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            />
+        <activity
+            android:name=".device.BatteryDetailActivity"
+            android:label="电池详情"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".device.SocketDetatilActivity"
+            android:label="插座详情"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".device.AddTimerActivity"
+            android:label="添加及编辑定时"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".folder.AddDeviceTypeActivity"
+            android:label="添加及编辑定时"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".ResetCodeActivity"
+            android:label="重置"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".imagealumutils.PhotoAlumActivity"
+            android:label="图片选择器"
+            android:screenOrientation="portrait" />
+        <activity android:name=".SystemActivity"
+            android:label="系统设置"
+            android:screenOrientation="portrait" />
+        <activity android:name=".AlarmListActivity"
+            android:label="告警总列表"
+            android:screenOrientation="portrait" />
+        <activity android:name=".device.SocketHistoryActivity"
+            android:label="插座历史记录列表"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".QuestionActivity"
+            android:label="常见问题"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AboutActivity"
+            android:label="关于"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".user.ChangePasswordActivity"
+            android:label="用户修改密码"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".device.DeviceSettingActivity"
+            android:label="设备设置"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".device.WaterSensorDetailActivity"
+            android:label="水感界面"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TestActivity"
+            android:label="测试"
+            android:screenOrientation="portrait" />
+
+        <!-- Sychronize data service -->
+        <service android:name=".SychronizeService"
+            android:enabled="true"
+            android:label="siterwell服务"
+            android:exported="true"/>
+
+
+
+        <!-- [START firebase_service] -->
+        <service
+            android:name=".pushsevice.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- [END firebase_service] -->
+        <!-- [START firebase_iid_service] -->
+        <service
+            android:name=".pushsevice.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- [END firebase_iid_service] -->
+        <service android:name=".pushsevice.MyJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
+        <!-- 华为推送服务  -->
+        <!-- 第三方相关 :接收Push消息（注册、Push消息、Push连接状态、标签，LBS上报结果）广播 -->
+        <receiver android:name=".pushsevice.HuaweiPushRevicer" >
+            <intent-filter>
+                <!-- 必须,用于接收token-->
+                <action android:name="com.huawei.android.push.intent.REGISTRATION" />
+                <!-- 必须，用于接收消息-->
+                <action android:name="com.huawei.android.push.intent.RECEIVE" />
+                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发onEvent回调-->
+                <action android:name="com.huawei.android.push.intent.CLICK" />
+                <!-- 可选，查看push通道是否连接，不查看则不需要-->
+                <action android:name="com.huawei.intent.action.PUSH_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 备注：Push相关的android组件需要添加到业务的AndroidManifest.xml,
+          Push相关android组件运行在另外一个进程是为了防止Push服务异常而影响主业务 -->
+
+        <!-- PushSDK:PushSDK接收外部请求事件入口 -->
+        <receiver
+            android:name="com.huawei.android.pushagent.PushEventReceiver"
+            android:process=":pushservice" >
+            <intent-filter>
+                <action android:name="com.huawei.android.push.intent.REFRESH_PUSH_CHANNEL" />
+                <action android:name="com.huawei.intent.action.PUSH" />
+                <action android:name="com.huawei.intent.action.PUSH_ON" />
+                <action android:name="com.huawei.android.push.PLUGIN" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="com.siterwell.siterlink" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.huawei.android.pushagent.PushBootReceiver"
+            android:process=":pushservice" >
+            <intent-filter>
+                <action android:name="com.huawei.android.push.intent.REGISTER" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+            <meta-data
+                android:name="CS_cloud_version"
+                android:value="\u0032\u0037\u0030\u0035" />
+        </receiver>
+
+        <!-- PushSDK:Push服务 -->
+        <service
+            android:name="com.huawei.android.pushagent.PushService"
+            android:process=":pushservice" >
+        </service>
+
+
+        <service
+            android:name="com.xiaomi.push.service.XMJobService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=":pushservice" />
+
+        <service
+            android:name="com.xiaomi.push.service.XMPushService"
+            android:enabled="true"
+            android:process=":pushservice" />
+
+        <service
+            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+            android:enabled="true" />
+
+        <receiver
+            android:name=".pushsevice.XiaomiMessageReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.ERROR" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.xiaomi.push.service.receivers.PingReceiver"
+            android:exported="false"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.xiaomi.push.PING_TIMER" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name="com.siterwell.sdk.common.SiterCoreService"
+            android:exported="true"
+            android:label="SiterCoreService"
+            />
+
+        <receiver android:name="com.siterwell.sdk.common.UDPreceiver">
+            <intent-filter>
+                <action android:name="com.siterwell.sdk.UDPMessage"/>
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

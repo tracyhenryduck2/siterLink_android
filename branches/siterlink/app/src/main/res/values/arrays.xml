@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="folder_operation">
+        <item>MODIFY NAME</item>
+        <item>DELETE LOCALTION</item>
+    </array>
+    <array name="device_operation">
+        <item>MODIFY NAME</item>
+        <item>UNBIND DEVICE</item>
+        <item>MOVE TO OTHER LOCALTION</item>
+    </array>
+    <string-array name="languages">
+        <item>中文</item>
+        <item>English</item>
+        <item>Deutsch</item>
+        <item>Français</item>
+    </string-array>
+    <string-array name="week">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+    <string-array name="folder_name">
+        <item>My Home</item>
+        <item>GuestBedroom</item>
+        <item>Kitchen</item>
+        <item>MasterBedroom</item>
+        <item>Parlour</item>
+        <item>Stair</item>
+        <item>Lora</item>
+    </string-array>
+    <string-array name="more_setting">
+        <item>History Log</item>
+        <item>Device Info</item>
+    </string-array>
+    <array name="question">
+        <item>What are the main functions of SiterLink?</item>
+        <item>How do I download SiterLink?</item>
+        <item>How do you configure your device using WIFI?</item>
+        <item>What are the possible reasons for configuring a device failure?</item>
+        <item>How to use mobile data network remote control device?</item>
+        <item>How do you authorize other people to share device control rights?</item>
+    </array>
+    <array name="answer">
+        <item>You purchased the SiterLink smart home equipment, and bound APP, you can use your device networking, mobile global remote control.</item>
+        <item>You can search and download the “SiterLink” app from Apple App store or apply treasure, Google Play platform. APP currently supportsAndroid 4.0 system and above,or IOS8.0 system and above.</item>
+        <item>At present, most of the home equipment are WIFI equipment, after the SiterLink login: \n (1) equipment will be energized and boot, please put your smart mobile phone connected to the WIFI\n (2) in accordance with the product specifications and reduction equipment, the equipment in a configurable state, because the reset method of each device is not the same, please see the instructions to \n (3)  Open the APP, and add the group firstly, click to enter the group, click the "+" button in the upper right corner of the device list, select the WIFI network equipment, APP will automatically read the current network name, manual input password, click "connect" button, wait for about 20s to see Adding successful equipment</item>
+        <item>(1) Config network failure, please check the WIFI name and password are correct \n (2) fail to find device, please check whether the device is normal or WIFI name and password are correct, and then remove the battery after a minute click Retry \n (3) PINCODE failed to get a problem, please check the network environment, and then remove the battery one minute after the click Retry \n (4) equipment by others bound, according to the prompt contact or contact us bound \n (5) mobile devices to packet failure, please check the network, and remove the battery after a minute retry \n (6) please check whether the device power on \n (7) mobile phone is normal WiFi \n through the network connection (8) whether the device is in the distribution state (what is distribution state please view the instruction manual in detail, the general is to manually trigger device of the key into the distribution state) \n (9) \na, the check router supports only 2.4G wireless products The network, does not support the 5G, to check your router is not 2.4G \nb wireless network, router signal instability, click again to try to connect to the \nc router configuration, set the maximum number of access devices, and access equipment has reached the upper limit; try to close a WiFi device \nd, WiFi channel re allocation of empty password more than 32, or the use of Chinese special characters such as \ne, open the AP router isolation, unable to search to the device (network success have not received successful information) \nf, open wireless router MAC address filter, MAC filter list should be removed from the equipment of the router, the router that does not prohibit networking equipment \n</item>
+        <item>WiFi class device, when you first use the binding to add equipment, you need the equipment and mobile phones in the same WIFI environment, bound after using 2G, 3G, 4G, remote control can be achieved</item>
+        <item>You can let your friends, family, and you log in using the same login name, so you can control the device at the same time, or you can use the APP share enabled feature</item>
+    </array>
+</resources>
