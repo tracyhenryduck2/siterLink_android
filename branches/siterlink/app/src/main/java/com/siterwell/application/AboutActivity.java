@@ -37,16 +37,11 @@ public class AboutActivity extends TopbarSuperActivity {
     }
 
     private void initview(){
-
         app_txt     = (SettingItem)findViewById(R.id.app_version);
         updateAppAuto = new UpdateAppAuto(this,app_txt,true);
         String verName = Config.getVerName(this, getPackageName());
         app_txt.setDetailText(verName);
-
-
         updateAppAuto.getUpdateInfo();
-
-
     }
 
 }

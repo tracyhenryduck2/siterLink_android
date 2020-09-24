@@ -78,7 +78,7 @@ import me.hekr.sdk.utils.ErrorCodeUtil;
  * Created by gc-0001 on 2017/4/22.
  */
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,HomeAdapter.OnRecyclerViewItemClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener,HomeAdapter.OnRecyclerViewItemClickListener{
     private final String TAG ="MainActivity";
     private SlidingMenu mMenu;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.grid_swipe_refresh);
         //调整SwipeRefreshLayout的位置
-        swipeRefreshLayout.setColorSchemeResources(R.color.bar_bg);
+        swipeRefreshLayout.setColorSchemeResources(R.color.edit_color);
         swipeRefreshLayout.setProgressViewOffset(false, 0,  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
         mMenu = (SlidingMenu) findViewById(R.id.id_menu);
         username = (TextView)findViewById(R.id.admin);

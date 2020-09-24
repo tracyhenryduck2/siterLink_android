@@ -358,4 +358,5 @@
    <string name="permission_reject_location_service_tip">请打开定位服务,否则无法进行WIFI配置</string>
    <string name="permission_register">权限申请</string>
    <string name="goto_set">去设置</string>
+   <string name="help">帮助</string>
 </resources>

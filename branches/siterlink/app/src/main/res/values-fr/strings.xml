@@ -358,4 +358,5 @@
    <string name="permission_reject_location_service_tip">Veuillez ouvrir le Service de localisation, sinon vous ne pourrez pas configurer WiFi</string>
    <string name="permission_register">Demande d ’autorisation</string>
    <string name="goto_set">Deformer</string>
+    <string name="help">Aider</string>
 </resources>

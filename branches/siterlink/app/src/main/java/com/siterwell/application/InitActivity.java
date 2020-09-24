@@ -29,7 +29,7 @@ import me.hekr.sdk.utils.CacheUtil;
  * Created by TracyHenry on 2018/5/9.
  */
 
-public class InitActivity extends AppCompatActivity {
+public class InitActivity extends BaseActivity {
 private final static String TAG = "InitActivity";
 private ImageView imageView1;
     @Override
@@ -121,6 +121,4 @@ private ImageView imageView1;
             }
         }
     };
-
-
 }

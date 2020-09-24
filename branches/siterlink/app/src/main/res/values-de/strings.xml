@@ -358,4 +358,5 @@
     <string name="permission_reject_location_service_tip">Bitte öffnen Sie den Standortservice, sonst können Sie das WLAN nicht konfigurieren</string>
    <string name="permission_register">Antrag auf Zulassung</string>
    <string name="goto_set">Zur Einrichtung</string>
+    <string name="help">Hilfe</string>
 </resources>

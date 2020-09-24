@@ -7,13 +7,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:layout_marginTop="40dp"
-        android:gravity="center_vertical"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:orientation="vertical"
         android:id="@+id/top">
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="20dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:src="@mipmap/user_photo"/>
         <TextView
             android:layout_width="wrap_content"
@@ -21,29 +21,21 @@
             android:text="admin"
             android:textSize="@dimen/NormalTextSize"
             android:textColor="@color/black"
-            android:layout_marginLeft="20dp"
-            android:id="@+id/admin"/>
+            android:id="@+id/admin"
+            android:layout_marginTop="10dp"/>
     </LinearLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/top"
-        android:layout_marginTop="40dp"
-        android:background="@color/mainGround"
-        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:orientation="vertical"
+        android:layout_below="@id/top"
+        android:layout_marginTop="50dp"
         android:id="@+id/con">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:id="@+id/person">
-
             <ImageView
                 android:id="@+id/one"
                 android:layout_width="@dimen/menu_item_width"
@@ -52,7 +44,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:src="@mipmap/wode_12" />
-
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -63,13 +54,12 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/setting_font_size" />
         </RelativeLayout>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/warn_list"
+            android:padding="5dp"
             android:visibility="gone">
-
             <ImageView
                 android:id="@+id/two"
                 android:layout_width="@dimen/menu_item_width"
@@ -78,7 +68,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:src="@mipmap/wode_05" />
-
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -89,12 +78,11 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/setting_font_size" />
         </RelativeLayout>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:id="@+id/system_setting">
-
             <ImageView
                 android:id="@+id/three"
                 android:layout_width="@dimen/menu_item_width"
@@ -103,7 +91,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:src="@mipmap/wode_10" />
-
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -113,14 +100,12 @@
                 android:text="@string/system_setting"
                 android:textColor="@color/black"
                 android:textSize="@dimen/setting_font_size" />
-
         </RelativeLayout>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:id="@+id/learned">
-
             <ImageView
                 android:id="@+id/four"
                 android:layout_width="@dimen/menu_item_width"
@@ -129,7 +114,6 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:src="@mipmap/wode_14" />
-
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -139,19 +123,23 @@
                 android:text="@string/learn_more"
                 android:textColor="@color/black"
                 android:textSize="@dimen/setting_font_size" />
-
         </RelativeLayout>
-
     </LinearLayout>
-    <Button
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_gravity="center"
-        android:text="@string/logout"
-        android:textColor="@color/white"
-        android:layout_below="@id/con"
-        android:background="@drawable/common_btn_bg"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/logout"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/con">
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="40dp"
+            android:layout_gravity="center"
+            android:text="@string/logout"
+            android:textColor="@color/white"
+            android:background="@drawable/common_btn_bg"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/logout"/>
+    </RelativeLayout>
 </RelativeLayout>

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -48,7 +47,7 @@ import me.hekr.sdk.inter.HekrCallback;
 import me.hekr.sdk.utils.CacheUtil;
 
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "LoginActivity";
     private EditText et_username;
     private CodeEdit et_pwd;
@@ -64,11 +63,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         tcpGetDomain();
         setContentView(R.layout.activity_login);
         initGTService();
-
     }
 
     private String getUsername(){
-
         SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
         ECPreferenceSettings flag = ECPreferenceSettings.SETTINGS_USERNAME;
         String autoflag = sharedPreferences.getString(flag.getId(), (String) flag.getDefaultValue());
@@ -76,7 +73,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private boolean getAutoLogin(){
-
         SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
         ECPreferenceSettings flag = ECPreferenceSettings.SETTINGS_REMEMBER_PASSWORD;
         boolean autoflag = sharedPreferences.getBoolean(flag.getId(), (boolean) flag.getDefaultValue());
@@ -84,7 +80,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private String getPassword(){
-
         SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
         ECPreferenceSettings flag = ECPreferenceSettings.SETTINGS_PASSWORD;
         String autoflag = sharedPreferences.getString(flag.getId(), (String) flag.getDefaultValue());
@@ -114,21 +109,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.reset_code).setOnClickListener(this);
     }
 
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_login:
-
                 final String username = et_username.getText().toString().trim();
                 final String pwd = et_pwd.getCodeEdit().getText().toString().trim();
                 if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(pwd)) {
                     progressDialog = new ProgressDialog(this);
                     progressDialog.show();
-
-
-
                     Hekr.getHekrUser().login(username, pwd, new HekrCallback() {
                         @Override
                         public void onSuccess() {
@@ -212,15 +201,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.regist:
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 break;
-
         }
     }
-
-
-
-
-
-
 
     private void initGTService() {
         parseManifests();
@@ -244,16 +226,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(new Intent(this, InitActivity.class));
                 finish();
             }
-
         }
-
-
     }
     private static final int REQUEST_PERMISSION = 0;
     private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_PHONE_STATE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 REQUEST_PERMISSION);
     }
+
     private void parseManifests() {
         String packageName = getApplicationContext().getPackageName();
         try {
@@ -314,12 +294,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         new Thread(){
             @Override
             public void run() {
-
                 try {
                     final String HOST="info.hekr.me";
                     //final String HOST="127.0.0.1";
                     Socket socket = null;//创建一个客户端连接
-
                     socket = new Socket();
                     socket.connect(new InetSocketAddress(HOST,91),5000);
                     OutputStream out = socket.getOutputStream();//获取服务端的输出流，为了向服务端输出数据
@@ -350,19 +328,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         } catch (InvalidClassException e) {
                             e.printStackTrace();
                         }
-
-
-
                     }
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }.start();
-
-
     }
 
 }

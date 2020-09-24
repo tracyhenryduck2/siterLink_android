@@ -12,7 +12,7 @@ import com.siterwell.application.updateapp.UpdateAppAuto;
  */
 
 public class SystemActivity extends TopbarSuperActivity implements View.OnClickListener{
-    private SettingItem settingItem_lan,settingItem_cache,settingItem_answer,settingItem_about;
+    private SettingItem settingItem_lan,settingItem_cache,settingItem_answer,settingItem_about, settingItem_help;
     private UpdateAppAuto updateAppAuto;
 
     @Override
@@ -30,6 +30,7 @@ public class SystemActivity extends TopbarSuperActivity implements View.OnClickL
         settingItem_cache = (SettingItem)findViewById(R.id.cache);
         settingItem_answer = (SettingItem)findViewById(R.id.answer);
         settingItem_about = (SettingItem)findViewById(R.id.about);
+        settingItem_help = (SettingItem)findViewById(R.id.help);
         getTopBarView().setTopBarStatus(R.drawable.back, -1, getResources().getString(R.string.system_setting), 1, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,16 +41,14 @@ public class SystemActivity extends TopbarSuperActivity implements View.OnClickL
         updateAppAuto.getUpdateInfo();
         settingItem_answer.setOnClickListener(this);
         settingItem_about.setOnClickListener(this);
+        settingItem_help.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.lan:
-
-                break;
             case R.id.cache:
-
                 break;
             case R.id.answer:
                 startActivity(new Intent(this,QuestionActivity.class));
@@ -57,7 +56,9 @@ public class SystemActivity extends TopbarSuperActivity implements View.OnClickL
             case R.id.about:
                 startActivity(new Intent(this,AboutActivity.class));
                 break;
-
+            case R.id.help:
+                startActivity(new Intent(this,HelpActivity.class));
+                break;
         }
     }
 }

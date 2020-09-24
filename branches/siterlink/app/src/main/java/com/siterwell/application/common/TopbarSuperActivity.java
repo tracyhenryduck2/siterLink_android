@@ -3,6 +3,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
@@ -37,6 +38,8 @@ public abstract class TopbarSuperActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.bar_bg), true);
+        StatusBarUtil.setLightMode(this);
         setContentView(R.layout.activity_base);
         init();
         swiperefreshLayoutInit();
@@ -64,8 +67,6 @@ public abstract class TopbarSuperActivity extends AppCompatActivity {
             mRootView.addView(mContentView, LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT);
         }
-
-        initSystemBar();
     }
 
     protected void swiperefreshLayoutInit(){
@@ -99,31 +100,6 @@ public abstract class TopbarSuperActivity extends AppCompatActivity {
                 inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
             }
         }
-    }
-
-
-    protected void initSystemBar(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getTopBarView().setFitsSystemWindows(true);//需要把根布局设置为这个属性 子布局则不会占用状态栏位置
-            getTopBarView().setClipToPadding(true);//需要把根布局设置为这个属性 子布局则不会占用状态栏位置
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                            | View.SYSTEM_UI_FLAG_IMMERSIVE);
-        }
-        SystemTintManager tintManager = new SystemTintManager(this);// 创建状态栏的管理实例
-        tintManager.setStatusBarTintEnabled(true);// 激活状态栏设置
-        tintManager.setStatusBarTintColor(getResources().getColor(R.color.white));//设置状态栏颜色
-        tintManager.setStatusBarDarkMode(false, this);//false 状态栏字体颜色是白色 true 颜色是黑色
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        initSystemBar();
     }
 
     @Override

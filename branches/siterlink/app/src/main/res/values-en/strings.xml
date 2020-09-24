@@ -358,4 +358,5 @@
    <string name="permission_reject_location_service_tip">Please open the location service, otherwise you cannot configure WIFI</string>
    <string name="permission_register">Application for authority</string>
    <string name="goto_set">Setting</string>
+    <string name="help">Help</string>
 </resources>

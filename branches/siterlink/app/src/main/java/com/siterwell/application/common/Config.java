@@ -11,6 +11,8 @@ import com.siterwell.sdk.http.BaseHttpUtil;
 import com.siterwell.sdk.http.HekrCodeUtil;
 import com.siterwell.sdk.http.HekrUser;
 
+import java.util.Locale;
+
 import cz.msebera.android.httpclient.Header;
 
 
@@ -53,6 +55,25 @@ public class Config {
 		String verName = context.getResources()
 		.getText(R.string.app_name).toString();
 		return verName;
+	}
+
+	/**
+	 * 隐私政策网址
+	 */
+	public static String getPhonePushSetting(Context context){
+		Locale locale = context.getResources().getConfiguration().locale;
+		String lan = locale.getLanguage();
+		switch (lan) {
+			case "zh":
+				return "http://61.164.94.198:1415/SiterLink/zh/shezhi.html";
+			case "fr":
+				return "http://61.164.94.198:1415/SiterLink/fr/shezhi.html";
+			case "de":
+				return "http://61.164.94.198:1415/SiterLink/de/shezhi.html";
+			case "en":
+			default:
+				return "http://61.164.94.198:1415/SiterLink/en/shezhi.html";
+		}
 	}
 
 	/**

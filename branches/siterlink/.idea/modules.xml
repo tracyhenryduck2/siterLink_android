@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/branches-siterlink.iml" filepath="$PROJECT_DIR$/.idea/modules/branches-siterlink.iml" group="siterlink" />
       <module fileurl="file://$PROJECT_DIR$/siterlink.iml" filepath="$PROJECT_DIR$/siterlink.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/siterlink-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/siterlink-app.iml" group="siterlink/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/siterwell/siterlink-siterwell.iml" filepath="$PROJECT_DIR$/.idea/modules/siterwell/siterlink-siterwell.iml" group="siterlink/siterwell" />
       <module fileurl="file://$PROJECT_DIR$/siterwell/siterwell.iml" filepath="$PROJECT_DIR$/siterwell/siterwell.iml" />
     </modules>
   </component>

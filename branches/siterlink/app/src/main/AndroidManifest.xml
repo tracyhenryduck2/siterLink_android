@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.siterwell.application">
 
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -40,27 +41,14 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        >
+        tools:targetApi="m">
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher_alpha" />
         <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
              notification message. See README(https://goo.gl/6BKBk7) for more. -->
-        <activity
-            android:name="com.zbar.lib.ScanCaptureAct"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".MainActivity"
-            android:label="主页面"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-            />
-        <activity
-            android:name=".RegisterActivity"
-            android:label="注册"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait">
@@ -70,6 +58,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.zbar.lib.ScanCaptureAct"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MainActivity"
+            android:label="主页面"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+        <activity
+            android:name=".RegisterActivity"
+            android:label="注册"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".InitActivity"
             android:label="初始化"
@@ -166,6 +167,10 @@
         <activity
             android:name=".QuestionActivity"
             android:label="常见问题"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HelpActivity"
+            android:label="帮助"
             android:screenOrientation="portrait" />
         <activity
             android:name=".AboutActivity"
