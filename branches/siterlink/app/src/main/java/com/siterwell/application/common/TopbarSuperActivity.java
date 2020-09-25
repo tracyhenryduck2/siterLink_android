@@ -25,6 +25,7 @@ import com.siterwell.application.commonview.TopBarView;
  */
 public abstract class TopbarSuperActivity extends AppCompatActivity {
 
+    protected String TAG = getClass().getSimpleName();
     /**
      * 标题
      */

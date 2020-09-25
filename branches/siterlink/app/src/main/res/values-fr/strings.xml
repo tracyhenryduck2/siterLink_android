@@ -359,4 +359,5 @@
    <string name="permission_register">Demande d ’autorisation</string>
    <string name="goto_set">Deformer</string>
     <string name="help">Aider</string>
+   <string name="open_notification">Si vous n ’ouvrez pas les droits de la barre de notification de l’ APP, vous ne pourrez pas recevoir le message de poussée</string>
 </resources>

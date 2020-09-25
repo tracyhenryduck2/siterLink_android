@@ -1,11 +1,11 @@
 package com.siterwell.application;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,8 +23,9 @@ import com.siterwell.application.common.CCPAppManager;
 import com.siterwell.application.common.ECPreferenceSettings;
 import com.siterwell.application.common.ECPreferences;
 import com.siterwell.application.common.Errcode;
+import com.siterwell.application.common.PermissionUtils;
+import com.siterwell.application.commonview.BaseDialog;
 import com.siterwell.application.commonview.CodeEdit;
-import com.siterwell.application.commonview.ECAlertDialog;
 import com.siterwell.application.commonview.ProgressDialog;
 import com.siterwell.application.user.ClientUser;
 import com.siterwell.sdk.http.HekrUser;
@@ -62,7 +63,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         tcpGetDomain();
         setContentView(R.layout.activity_login);
-        initGTService();
+        initView();
+        if (getPermission()){
+            requestPermission();
+        }
     }
 
     private String getUsername(){
@@ -113,6 +117,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_login:
+                if (getPermission()){
+                    requestPermission();
+                    return;
+                }
                 final String username = et_username.getText().toString().trim();
                 final String pwd = et_pwd.getCodeEdit().getText().toString().trim();
                 if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(pwd)) {
@@ -148,7 +156,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                     } catch (InvalidClassException e) {
                                         e.printStackTrace();
                                     }
-                                    if(progressDialog!=null&progressDialog.isShowing()){
+                                    if(progressDialog!=null && progressDialog.isShowing()){
                                         progressDialog.dismiss();
                                     }
                                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -157,7 +165,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                                 @Override
                                 public void getProfileFail(int errorCode) {
-                                    if(progressDialog!=null&progressDialog.isShowing()){
+                                    if(progressDialog!=null && progressDialog.isShowing()){
                                         progressDialog.dismiss();
                                     }
                                     toastor.showSingleLongToast(Errcode.errorCode2Msg(LoginActivity.this,errorCode));
@@ -176,11 +184,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                 e.printStackTrace();
                                 toastor.showSingleLongToast(Errcode.errorCode2Msg(LoginActivity.this,errorCode));
                             }finally {
-                                if(progressDialog!=null&progressDialog.isShowing()){
+                                if(progressDialog!=null && progressDialog.isShowing()){
                                     progressDialog.dismiss();
                                 }
                             }
-
                         }
                     });
                 } else {
@@ -204,81 +211,47 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private void initGTService() {
-        parseManifests();
+    private boolean getPermission() {
         PackageManager pkgManager = getPackageManager();
-
         // read phone state用于获取 imei 设备信息
         boolean phoneSatePermission =
                 pkgManager.checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName()) == PackageManager.PERMISSION_GRANTED;
-
         // read phone state用于获取 imei 设备信息
         boolean writeSatePermission =
                 pkgManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getPackageName()) == PackageManager.PERMISSION_GRANTED;
-
-
-        if ( !phoneSatePermission || !writeSatePermission) {
-            requestPermission();
-        }else{
-            if (TextUtils.isEmpty(HekrUserAction.getInstance(this).getJWT_TOKEN())) {
-                initView();
-            } else {
-                startActivity(new Intent(this, InitActivity.class));
-                finish();
-            }
-        }
+        return !phoneSatePermission || !writeSatePermission;
     }
     private static final int REQUEST_PERMISSION = 0;
+
     private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.READ_PHONE_STATE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 REQUEST_PERMISSION);
     }
 
-    private void parseManifests() {
-        String packageName = getApplicationContext().getPackageName();
-        try {
-            android.content.pm.ApplicationInfo appInfo = getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-            if (appInfo.metaData != null) {
-                String appid = appInfo.metaData.getString("PUSH_APPID");
-                String appsecret = appInfo.metaData.getString("PUSH_APPSECRET");
-                String appkey = appInfo.metaData.getString("PUSH_APPKEY");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                if (TextUtils.isEmpty(HekrUserAction.getInstance(this).getJWT_TOKEN())) {
-                    initView();
-                } else {
-                    startActivity(new Intent(this, InitActivity.class));
-                    finish();
-                }
-            } else {
-
-                ECAlertDialog ecAlertDialog = ECAlertDialog.buildPositiveAlert(this, R.string.you_must_grant_permission, new DialogInterface.OnClickListener() {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED || grantResults[1] != PackageManager.PERMISSION_GRANTED) {
+                BaseDialog mDialog = new BaseDialog(this, new BaseDialog.OnCallBackToRefresh() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onConfirm() {
+                        PermissionUtils.startToSetting(LoginActivity.this);
+                    }
+
+                    @Override
+                    public void onCancel() {
                         finish();
                     }
                 });
-                ecAlertDialog.setCanceledOnTouchOutside(false);
-                ecAlertDialog.setCancelable(false);
-                ecAlertDialog.show();
+                mDialog.setTitleAndButton(getString(R.string.you_must_grant_permission), getString(R.string.dialog_cancel), getString(R.string.goto_set));
+                mDialog.show();
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-
     }
 
     private String getdomain(){
-
         SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
         ECPreferenceSettings flag = ECPreferenceSettings.SETTINGS_DOMAIN;
         String autoflag = sharedPreferences.getString(flag.getId(), (String) flag.getDefaultValue());
@@ -286,7 +259,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void tcpGetDomain(){
-
         String domain = getdomain();
         Log.i(TAG,"设置本地domain:"+domain);
         Constants.setOnlineSite(domain);
@@ -335,5 +307,4 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             }
         }.start();
     }
-
 }

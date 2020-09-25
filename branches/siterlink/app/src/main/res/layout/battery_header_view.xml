@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
     <Button
         android:id="@+id/btnConfirm"
         android:text="@string/battery_silence"
@@ -28,7 +27,7 @@
             android:id="@+id/back"
             android:layout_alignParentLeft="true"
             android:src="@mipmap/batteryback"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="32dp"
             android:layout_marginLeft="20dp"/>
         <ImageView
             android:layout_width="@dimen/more_button_width"
@@ -37,7 +36,7 @@
             android:id="@+id/more"
             android:layout_alignParentRight="true"
             android:src="@mipmap/more_icon"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="32dp"
             android:layout_marginRight="20dp"/>
 
 

@@ -3,8 +3,10 @@ package com.siterwell.application.device;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.siterwell.application.BaseActivity;
 import com.siterwell.application.BusEvents.GetDeviceStatusEvent;
 import com.siterwell.application.common.Errcode;
 import com.siterwell.application.commonview.ProgressDialog;
@@ -49,7 +52,7 @@ import com.siterwell.sdk.protocol.BatteryCommand;
  * Created by ST-020111 on 2017/4/14.
  */
 
-public class BatteryDetailActivity extends TopbarSuperActivity implements View.OnClickListener,ParallaxListView.IXListViewListener,RefreshBatteryListener{
+public class BatteryDetailActivity extends BaseActivity implements View.OnClickListener,ParallaxListView.IXListViewListener,RefreshBatteryListener{
     private final String TAG = "BatteryDetailActivity";
     private String deviceId;
     private ImageView signal,battery;
@@ -68,14 +71,12 @@ public class BatteryDetailActivity extends TopbarSuperActivity implements View.O
     private Button btn_silence;
     private ProgressDialog progressDialog;
     private BatteryCommand batteryCommand;
-    @Override
-    protected void onCreateInit() {
-        initView();
-    }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_battery_detail;
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_battery_detail);
+        initView();
     }
 
     private void initView(){
@@ -84,13 +85,6 @@ public class BatteryDetailActivity extends TopbarSuperActivity implements View.O
         batteryDao = new DeviceDao(this);
         height=(int)getResources().getDimension(R.dimen.battery_tip_test_height);
         deviceId = getIntent().getStringExtra("deviceId");
-        getTopBarView().setTopBarStatus(R.drawable.back, -1, getResources().getString(R.string.battery_detail), 1, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        },null,R.color.bar_bg);
-        getTopBarView().setVisibility(View.GONE);
 
         View headerView = View.inflate(this, R.layout.battery_header_view, null);
         ImageView ivBackground = (ImageView) headerView.findViewById(R.id.ivBackground);
@@ -131,7 +125,6 @@ public class BatteryDetailActivity extends TopbarSuperActivity implements View.O
         batteryDescBean = batteryDao.findBatteryBySid(deviceId);
         Log.i(TAG," batteryDescBean.getStatus():"+ batteryDescBean.getStatus());
 
-        getTopBarView().setTextTitle(TextUtils.isEmpty(batteryDescBean.getDeviceName())?DeviceActivitys.getDeviceType(batteryDescBean): batteryDescBean.getDeviceName());
         signal.setImageResource(BatteryDescBean.getSignal(batteryDescBean.getSignal()));
         battery.setImageResource(BatteryDescBean.getQuantinity(batteryDescBean.getBattPercent()));
         status.setText(batteryDescBean.getStatusDtail(batteryDescBean.getStatus()));

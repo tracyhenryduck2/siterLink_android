@@ -135,12 +135,8 @@ public class RoundProgressView extends View {
             mPaint.setColor(mTextColor);
             mPaint.setStyle(Paint.Style.FILL);
             mPaint.setTextAlign(Paint.Align.CENTER);
-            String number = (int)(mProgress*100/mMax)+"";
-            canvas.drawText(number, mWidth/2+mPaddingX, mHeight/2, mPaint);
-
-            float textWidth = mPaint.measureText(number);
-            mPaint.setTextSize(mPencentTextSize/2);
-            canvas.drawText("%", mWidth/2+mPaddingX+textWidth/2+15, mHeight/2-mPencentTextSize/8, mPaint);
+            String number = (int)(mProgress*100/mMax) + "%";
+            canvas.drawText(number, mWidth/2f + mPaddingX, mHeight/2f + 50, mPaint);
         }else{
             //mPaint.reset();
             mPaint.setColor(colors[0]);

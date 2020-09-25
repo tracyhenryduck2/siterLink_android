@@ -1,7 +1,6 @@
 package com.siterwell.application;
 
 import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,10 +35,12 @@ import com.siterwell.application.common.Config;
 import com.siterwell.application.common.ECPreferenceSettings;
 import com.siterwell.application.common.ECPreferences;
 import com.siterwell.application.common.Errcode;
+import com.siterwell.application.common.PermissionUtils;
 import com.siterwell.application.common.SystemUtil;
 import com.siterwell.application.common.UnitTools;
+import com.siterwell.application.commonview.BaseDialog;
+import com.siterwell.application.commonview.BottomListDialog;
 import com.siterwell.application.commonview.ECAlertDialog;
-import com.siterwell.application.commonview.ECListDialog;
 import com.siterwell.application.commonview.EmRecylerView;
 import com.siterwell.application.commonview.ProgressDialog;
 import com.siterwell.application.commonview.SlidingMenu;
@@ -333,110 +334,114 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
 
     @Override
     public void onItemClick(View view, LocalFolderBean folderBean) {
-        Intent intent = new Intent(this, com.siterwell.application.folder.DeviceListActivity.class);
+        Intent intent = new Intent(this, DeviceListActivity.class);
         intent.putExtra("folderBean",folderBean);
         startActivity(intent);
     }
 
     @Override
     public void onItemLongClick(View view,final LocalFolderBean deviceBean) {
-        ECListDialog ecListDialog = new ECListDialog(this,getResources().getStringArray(R.array.folder_operation));
-        ecListDialog.setTitle(deviceBean.getFolderName());
-        ecListDialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+        BottomListDialog mDialog = new BottomListDialog(this, new BottomListDialog.onCallBack() {
             @Override
-            public void onDialogItemClick(Dialog d, int position) {
-                switch (position){
+            public void callBack(int i) {
+                switch (i) {
                     case 0:
-                        alertDialog = ECAlertDialog.buildAlert(MainActivity.this, getResources().getString(R.string.update_name),getResources().getString(R.string.dialog_btn_cancel),getResources().getString(R.string.dialog_btn_confim), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                alertDialog.setDismissFalse(true);
-                            }
-                        }, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                EditText text = (EditText) alertDialog.getContent().findViewById(R.id.tet);
-                                final String newname = text.getText().toString().trim();
-
-                                if(!TextUtils.isEmpty(newname)){
-
-                                    try {
-                                        if(newname.getBytes("GBK").length<=15){
-                                            alertDialog.setDismissFalse(true);
-                                            HekrUserAction.getInstance(MainActivity.this).renameFolder(newname+deviceBean.getImage(), deviceBean.getFolderId(), new HekrUser.RenameFolderListener() {
-                                                  @Override
-                                                  public void renameSuccess() {
-                                                      folderDao.updateFolderName(newname,deviceBean.getFolderId());
-                                                       Toast.makeText(MainActivity.this,getResources().getString(R.string.success_modify),Toast.LENGTH_SHORT).show();
-                                                      getFolderInfo();
-                                                  }
-
-                                                  @Override
-                                                  public void renameFail(int errorCode) {
-                                                      Toast.makeText(MainActivity.this, Errcode.errorCode2Msg(MainActivity.this,errorCode),Toast.LENGTH_SHORT).show();
-                                                  }
-                                              });
-                                        }else{
-                                            alertDialog.setDismissFalse(false);
-                                            Toast.makeText(MainActivity.this,getResources().getString(R.string.name_is_too_long),Toast.LENGTH_SHORT).show();
-                                        }
-                                    } catch (UnsupportedEncodingException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-                                else{
-                                    alertDialog.setDismissFalse(false);
-                                    Toast.makeText(MainActivity.this,getResources().getString(R.string.name_is_null),Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                        alertDialog.setContentView(R.layout.edit_alert);
-                        alertDialog.setTitle(getResources().getString(R.string.update_name));
-                        EditText text = (EditText) alertDialog.getContent().findViewById(R.id.tet);
-                        text.setText(deviceBean.getFolderName());
-                        text.setSelection(deviceBean.getFolderName().length());
-
-                        alertDialog.show();
+                        modifyName(deviceBean);
                         break;
                     case 1:
-                        String ds = getResources().getString(R.string.root);
-                        if(!"root".equals(deviceBean.getFolderName())){
-                            ds = deviceBean.getFolderName();
-                        }
-                        String deletething = String.format(getResources().getString(R.string.delete_it_or_not),ds);
-                        ECAlertDialog elc = ECAlertDialog.buildAlert(MainActivity.this,deletething, getResources().getString(R.string.dialog_btn_cancel), getResources().getString(R.string.dialog_btn_confim),null, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                HekrUserAction.getInstance(MainActivity.this).deleteFolder(deviceBean.getFolderId(), new HekrUser.DeleteFileListener() {
-                                   @Override
-                                   public void deleteSuccess()
-                                   {
-                                       folderDao.deleteByFolderId(deviceBean.getFolderId());
-                                       Toast.makeText(MainActivity.this,getResources().getString(R.string.success_delete),Toast.LENGTH_SHORT).show();
-                                       getFolderInfo();
-                                   }
-
-                                   @Override
-                                   public void deleteFail(int errorCode) {
-                                           if(6400017 == errorCode){
-                                               Toast.makeText(MainActivity.this,getResources().getString(R.string.this_folder_not_allow_to_delete),Toast.LENGTH_SHORT).show();
-                                           }else{
-                                               Toast.makeText(MainActivity.this, Errcode.errorCode2Msg(MainActivity.this,errorCode),Toast.LENGTH_SHORT).show();
-                                           }
-
-                                   }
-                               });
-                            }
-                        });
-                        elc.show();
-                        break;
-                    default:
+                        deleteStation(deviceBean);
                         break;
                 }
             }
         });
-        ecListDialog.show();
+        mDialog.setMsg(getResources().getStringArray(R.array.folder_operation));
+        mDialog.show();
+    }
+
+    private void modifyName(final LocalFolderBean deviceBean){
+        alertDialog = ECAlertDialog.buildAlert(MainActivity.this, getResources().getString(R.string.update_name),getResources().getString(R.string.dialog_btn_cancel),getResources().getString(R.string.dialog_btn_confim), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.setDismissFalse(true);
+            }
+        }, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText text = (EditText) alertDialog.getContent().findViewById(R.id.tet);
+                final String newname = text.getText().toString().trim();
+
+                if(!TextUtils.isEmpty(newname)){
+
+                    try {
+                        if(newname.getBytes("GBK").length<=15){
+                            alertDialog.setDismissFalse(true);
+                            HekrUserAction.getInstance(MainActivity.this).renameFolder(newname+deviceBean.getImage(), deviceBean.getFolderId(), new HekrUser.RenameFolderListener() {
+                                @Override
+                                public void renameSuccess() {
+                                    folderDao.updateFolderName(newname,deviceBean.getFolderId());
+                                    Toast.makeText(MainActivity.this,getResources().getString(R.string.success_modify),Toast.LENGTH_SHORT).show();
+                                    getFolderInfo();
+                                }
+
+                                @Override
+                                public void renameFail(int errorCode) {
+                                    Toast.makeText(MainActivity.this, Errcode.errorCode2Msg(MainActivity.this,errorCode),Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }else{
+                            alertDialog.setDismissFalse(false);
+                            Toast.makeText(MainActivity.this,getResources().getString(R.string.name_is_too_long),Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                else{
+                    alertDialog.setDismissFalse(false);
+                    Toast.makeText(MainActivity.this,getResources().getString(R.string.name_is_null),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        alertDialog.setContentView(R.layout.edit_alert);
+        alertDialog.setTitle(getResources().getString(R.string.update_name));
+        EditText text = (EditText) alertDialog.getContent().findViewById(R.id.tet);
+        text.setText(deviceBean.getFolderName());
+        text.setSelection(deviceBean.getFolderName().length());
+        alertDialog.show();
+    }
+
+    private void deleteStation(final LocalFolderBean deviceBean){
+        String ds = getResources().getString(R.string.root);
+        if(!"root".equals(deviceBean.getFolderName())){
+            ds = deviceBean.getFolderName();
+        }
+        String deletething = String.format(getResources().getString(R.string.delete_it_or_not),ds);
+        ECAlertDialog elc = ECAlertDialog.buildAlert(MainActivity.this,deletething, getResources().getString(R.string.dialog_btn_cancel), getResources().getString(R.string.dialog_btn_confim),null, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                HekrUserAction.getInstance(MainActivity.this).deleteFolder(deviceBean.getFolderId(), new HekrUser.DeleteFileListener() {
+                    @Override
+                    public void deleteSuccess()
+                    {
+                        folderDao.deleteByFolderId(deviceBean.getFolderId());
+                        Toast.makeText(MainActivity.this,getResources().getString(R.string.success_delete),Toast.LENGTH_SHORT).show();
+                        getFolderInfo();
+                    }
+
+                    @Override
+                    public void deleteFail(int errorCode) {
+                        if(6400017 == errorCode){
+                            Toast.makeText(MainActivity.this,getResources().getString(R.string.this_folder_not_allow_to_delete),Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(MainActivity.this, Errcode.errorCode2Msg(MainActivity.this,errorCode),Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+            }
+        });
+        elc.show();
     }
 
     @Override
@@ -447,6 +452,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
             finish();
         }else{
             getFolderInfo();
+            getNotificationState();
+        }
+    }
+
+    private void getNotificationState(){
+        boolean notice = PermissionUtils.isPermissionOpen(this);
+        if (!notice){
+            String title  = getString(R.string.open_notification);
+            BaseDialog mDialog = new BaseDialog(this, new BaseDialog.OnCallBackToRefresh() {
+                @Override
+                public void onConfirm() {
+                   PermissionUtils.openPermissionSetting(MainActivity.this);
+                }
+
+                @Override
+                public void onCancel() {
+                    startActivity(new Intent(MainActivity.this, HelpActivity.class));
+                }
+            });
+            mDialog.setTitleAndButton(title, getString(R.string.help), getString(R.string.goto_set));
+            mDialog.setTitleSize(14);
+            mDialog.show();
         }
     }
 
@@ -517,9 +544,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
         });
     }
 
-
-
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -535,21 +559,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
     private void goBack(){
             String ds = String.format(getResources().getString(R.string.exit_hint), Config.getAppName(this));
             if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), ds,
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), ds, Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {
                 this.finish();
             }
-
-
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
-
         try {
             String deviceid = intent.getStringExtra("devTid");
             Log.i(TAG,"onNewIntent:deviceid"+deviceid);
@@ -562,9 +581,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
         }catch (NullPointerException e){
             e.printStackTrace();
         }
-
     }
-
 
     private void resetStorage(){
         FolderDao folderDao = new FolderDao(this);

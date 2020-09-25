@@ -359,4 +359,5 @@
    <string name="permission_register">权限申请</string>
    <string name="goto_set">去设置</string>
    <string name="help">帮助</string>
+   <string name="open_notification">您没有开启App的通知栏权限，将无法收到推送消息，请跳转到设置界面打开权限</string>
 </resources>

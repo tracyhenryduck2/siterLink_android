@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.siterwell.application.R;
 import com.siterwell.application.common.TopbarSuperActivity;
+import com.siterwell.application.commonview.SettingItem;
 import com.siterwell.application.folder.configuration.ConfigurationActivity;
 import com.siterwell.sdk.bean.DeviceType;
 import com.siterwell.sdk.protocol.GS140Command;
@@ -16,9 +17,6 @@ import com.siterwell.sdk.protocol.GS140Command;
  */
 
 public class GuideBattery1Activty extends TopbarSuperActivity implements View.OnClickListener{
-
-    private ImageView imageView_guide;
-    private Button btn_sig,btn_other;
 
     @Override
     protected void onCreateInit() {
@@ -37,9 +35,8 @@ public class GuideBattery1Activty extends TopbarSuperActivity implements View.On
                 finish();
             }
         }, null,R.color.bar_bg);
-        imageView_guide = (ImageView)findViewById(R.id.guide);
-        btn_sig = (Button)findViewById(R.id.siterwell);
-        btn_other = (Button)findViewById(R.id.other);
+        SettingItem btn_sig = findViewById(R.id.siterwell);
+        SettingItem btn_other = findViewById(R.id.other);
         btn_sig.setOnClickListener(this);
         btn_other.setOnClickListener(this);
     }
@@ -60,6 +57,6 @@ public class GuideBattery1Activty extends TopbarSuperActivity implements View.On
                 startActivity(intent2);
                 break;
         }
-          finish();
+        finish();
     }
 }

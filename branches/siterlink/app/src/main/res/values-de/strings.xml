@@ -359,4 +359,5 @@
    <string name="permission_register">Antrag auf Zulassung</string>
    <string name="goto_set">Zur Einrichtung</string>
     <string name="help">Hilfe</string>
+    <string name="open_notification">Sie haben nicht die Erlaubnis, die Anmeldeleiste der App zu öffnen. Sie werden nicht in der Lage sein, die Push-Nachricht zu erhalten.</string>
 </resources>

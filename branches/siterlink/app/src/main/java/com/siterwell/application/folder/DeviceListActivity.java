@@ -18,6 +18,7 @@ import com.siterwell.application.BusEvents.GetDeviceStatusEvent;
 import com.siterwell.application.BusEvents.RefreshEvent;
 import com.siterwell.application.common.CCPAppManager;
 import com.siterwell.application.common.Errcode;
+import com.siterwell.application.commonview.BottomListDialog;
 import com.siterwell.sdk.bean.BatteryBean;
 import com.siterwell.sdk.bean.DeviceType;
 import com.siterwell.sdk.bean.SocketBean;
@@ -297,216 +298,206 @@ public class DeviceListActivity extends TopbarSuperActivity implements DeviceAda
 
     @Override
     public void onItemLongClick(View view,final DeviceBean deviceBean) {
-        final ECListDialog ecListDialog = new ECListDialog(this,getResources().getStringArray(R.array.device_operation));
-        String ds = TextUtils.isEmpty(deviceBean.getDeviceName())?DeviceActivitys.getDeviceType(deviceBean):deviceBean.getDeviceName();
-        ecListDialog.setTitle(ds);
-        ecListDialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+        BottomListDialog mDialog = new BottomListDialog(this, new BottomListDialog.onCallBack() {
             @Override
-            public void onDialogItemClick(Dialog d, int position) {
-
-                switch (position){
+            public void callBack(int i) {
+                switch (i) {
                     case 0:
-                        alertDialog = ECAlertDialog.buildAlert(DeviceListActivity.this, getResources().getString(R.string.update_name),getResources().getString(R.string.dialog_btn_cancel),getResources().getString(R.string.dialog_btn_confim), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                alertDialog.setDismissFalse(true);
-                            }
-                        }, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                EditText text = (EditText) alertDialog.getContent().findViewById(R.id.tet);
-                                final String newname = text.getText().toString().trim();
-
-                                if(!TextUtils.isEmpty(newname)){
-                                    HekrUserAction.getInstance(DeviceListActivity.this).renameDevice(deviceBean.getDevTid(), deviceBean.getCtrlKey(), newname, null, deviceBean.getDcInfo().getConnectHost(), new HekrUser.RenameDeviceListener() {
-                                        @Override
-                                        public void renameDeviceSuccess() {
-                                            alertDialog.setDismissFalse(true);
-                                            deviceDao.updateDeviceName(deviceBean.getDevTid(),newname);
-                                            datalist = deviceDao.findAllDeviceBeanByFolderId(folderBean.getFolderId());
-                                            deviceAdapter.Refresh(datalist);
-                                            Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.success_modify),Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        @Override
-                                        public void renameDeviceFail(int errorCode) {
-                                            alertDialog.setDismissFalse(false);
-                                            Toast.makeText(DeviceListActivity.this,Errcode.errorCode2Msg(DeviceListActivity.this,errorCode),Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        @Override
-                                        public void NameLongErr() {
-                                            alertDialog.setDismissFalse(false);
-                                            Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.name_is_too_long),Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        @Override
-                                        public void NameContainEmojiErr() {
-                                            alertDialog.setDismissFalse(false);
-                                            Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.name_contain_emoji),Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-                                }
-                                else{
-                                    alertDialog.setDismissFalse(false);
-                                    Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.name_is_null),Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                        alertDialog.setContentView(R.layout.edit_alert);
-                        alertDialog.setTitle(getResources().getString(R.string.update_name));
-                        EditText text = (EditText) alertDialog.getContent().findViewById(R.id.tet);
-                        text.setText(deviceBean.getDeviceName());
-                        text.setSelection(deviceBean.getDeviceName().length());
-                        alertDialog.show();
+                        modifyName(deviceBean);
                         break;
                     case 1:
-
-                        if(TextUtils.isEmpty(deviceBean.getBindKey())){
-                            String thing = String.format(getResources().getString(R.string.cancel_ouath_hint),deviceBean.getDeviceName());
-                            alertDialog = ECAlertDialog.buildAlert(DeviceListActivity.this, thing,getResources().getString(R.string.dialog_btn_cancel),getResources().getString(R.string.dialog_btn_confim), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    alertDialog.setDismissFalse(true);
-                                }
-                            }, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    HekrUserAction.getInstance(DeviceListActivity.this).cancelOAuth(deviceBean.getCtrlKey(), CCPAppManager.getClientUser().getId(), new HekrUser.CancelOAuthListener() {
-                                        @Override
-                                        public void CancelOAuthSuccess() {
-                                            deviceDao.deleteByDeviceId(deviceBean.getDevTid());
-                                            datalist = deviceDao.findAllDeviceBeanByFolderId(folderBean.getFolderId());
-                                            deviceAdapter.Refresh(datalist);
-                                            if(datalist.size()==0){
-                                                swipeRefreshLayout.setVisibility(View.GONE);
-                                                swipeRefreshLayout_em.setVisibility(View.VISIBLE);
-                                            }else{
-                                                swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                                swipeRefreshLayout_em.setVisibility(View.GONE);
-                                            }
-                                            Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.success_delete),Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        @Override
-                                        public void CancelOauthFail(int errorCode) {
-                                            Toast.makeText(DeviceListActivity.this,Errcode.errorCode2Msg(DeviceListActivity.this,errorCode),Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-
-
-
-
-
-                                }
-                            });
-                            alertDialog.show();
-                        }else{
-                            String thing = String.format(getResources().getString(R.string.unbind_hint),deviceBean.getDeviceName());
-                            alertDialog = ECAlertDialog.buildAlert(DeviceListActivity.this, thing,getResources().getString(R.string.dialog_btn_cancel),getResources().getString(R.string.dialog_btn_confim), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    alertDialog.setDismissFalse(true);
-                                }
-                            }, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    HekrUserAction.getInstance(DeviceListActivity.this).deleteDevice(deviceBean.getDevTid(), deviceBean.getBindKey(), new HekrUser.DeleteDeviceListener() {
-                                        @Override
-                                        public void deleteDeviceSuccess() {
-                                            deviceDao.deleteByDeviceId(deviceBean.getDevTid());
-                                            datalist = deviceDao.findAllDeviceBeanByFolderId(folderBean.getFolderId());
-                                            deviceAdapter.Refresh(datalist);
-                                            if(datalist.size()==0){
-                                                swipeRefreshLayout.setVisibility(View.GONE);
-                                                swipeRefreshLayout_em.setVisibility(View.VISIBLE);
-                                            }else{
-                                                swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                                swipeRefreshLayout_em.setVisibility(View.GONE);
-                                            }
-                                            Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.success_delete),Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        @Override
-                                        public void deleteDeviceFail(int errorCode) {
-                                            Toast.makeText(DeviceListActivity.this,Errcode.errorCode2Msg(DeviceListActivity.this,errorCode),Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-
-
-
-
-
-                                }
-                            });
-                            alertDialog.show();
-                        }
-
-
+                        unBindDevice(deviceBean);
                         break;
                     case 2:
-                        final List<LocalFolderBean> list = folderDao.findAllFolders();
-                        List<String> slit = new ArrayList<String>();
-                        for(int i=0;i<list.size();i++){
-                            String ds = getResources().getString(R.string.root);
-                            if(!"root".equals(list.get(i).getFolderName())){
-                                ds = list.get(i).getFolderName();
-                            }
-                            slit.add(ds);
-                        }
-                        ECListDialog ecListDialog1 = new ECListDialog(DeviceListActivity.this, slit);
-                        ecListDialog1.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
-                            @Override
-                            public void onDialogItemClick(Dialog d,final int position) {
-
-
-                                HekrUserAction.getInstance(DeviceListActivity.this).devicesPutFolder(list.get(position).getFolderId(), deviceBean.getCtrlKey(), deviceBean.getDevTid(), new HekrUser.DevicePutFolderListener() {
-                                    @Override
-                                    public void putSuccess() {
-                                        DeviceBean deviceBean1 = new DeviceBean();
-                                        deviceBean1.setDevTid(deviceBean.getDevTid());
-                                        deviceBean1.setFolderId(list.get(position).getFolderId());
-                                        deviceDao.updateDeviceFolderid(deviceBean1);
-                                        Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.success_move),Toast.LENGTH_LONG).show();
-                                        datalist = deviceDao.findAllDeviceBeanByFolderId(folderBean.getFolderId());
-                                        deviceAdapter.Refresh(datalist);
-
-                                        if(datalist.size()==0){
-                                            swipeRefreshLayout.setVisibility(View.GONE);
-                                            swipeRefreshLayout_em.setVisibility(View.VISIBLE);
-                                        }else{
-                                            swipeRefreshLayout.setVisibility(View.VISIBLE);
-                                            swipeRefreshLayout_em.setVisibility(View.GONE);
-                                        }
-
-                                    }
-
-                                    @Override
-                                    public void putFail(int errorCode) {
-
-                                        Log.i(TAG,"putFail()");
-                                    }
-                                });
-
-                            }
-                        });
-                        ecListDialog1.setTitle(getResources().getString(R.string.all_folders));
-                        ecListDialog1.show();
-                        break;
-                    default:
+                        moveDevice(deviceBean);
                         break;
                 }
+            }
+        });
+        mDialog.setMsg(getResources().getStringArray(R.array.device_operation));
+        mDialog.show();
+    }
+
+    private void modifyName(final DeviceBean deviceBean){
+        alertDialog = ECAlertDialog.buildAlert(DeviceListActivity.this, getResources().getString(R.string.update_name),getResources().getString(R.string.dialog_btn_cancel),getResources().getString(R.string.dialog_btn_confim), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.setDismissFalse(true);
+            }
+        }, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText text = (EditText) alertDialog.getContent().findViewById(R.id.tet);
+                final String newname = text.getText().toString().trim();
+
+                if(!TextUtils.isEmpty(newname)){
+                    HekrUserAction.getInstance(DeviceListActivity.this).renameDevice(deviceBean.getDevTid(), deviceBean.getCtrlKey(), newname, null, deviceBean.getDcInfo().getConnectHost(), new HekrUser.RenameDeviceListener() {
+                        @Override
+                        public void renameDeviceSuccess() {
+                            alertDialog.setDismissFalse(true);
+                            deviceDao.updateDeviceName(deviceBean.getDevTid(),newname);
+                            datalist = deviceDao.findAllDeviceBeanByFolderId(folderBean.getFolderId());
+                            deviceAdapter.Refresh(datalist);
+                            Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.success_modify),Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void renameDeviceFail(int errorCode) {
+                            alertDialog.setDismissFalse(false);
+                            Toast.makeText(DeviceListActivity.this,Errcode.errorCode2Msg(DeviceListActivity.this,errorCode),Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void NameLongErr() {
+                            alertDialog.setDismissFalse(false);
+                            Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.name_is_too_long),Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void NameContainEmojiErr() {
+                            alertDialog.setDismissFalse(false);
+                            Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.name_contain_emoji),Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+                else{
+                    alertDialog.setDismissFalse(false);
+                    Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.name_is_null),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        alertDialog.setContentView(R.layout.edit_alert);
+        alertDialog.setTitle(getResources().getString(R.string.update_name));
+        EditText text = (EditText) alertDialog.getContent().findViewById(R.id.tet);
+        text.setText(deviceBean.getDeviceName());
+        text.setSelection(deviceBean.getDeviceName().length());
+        alertDialog.show();
+    }
+
+    private void unBindDevice(final DeviceBean deviceBean){
+        if(TextUtils.isEmpty(deviceBean.getBindKey())){
+            String thing = String.format(getResources().getString(R.string.cancel_ouath_hint),deviceBean.getDeviceName());
+            alertDialog = ECAlertDialog.buildAlert(DeviceListActivity.this, thing,getResources().getString(R.string.dialog_btn_cancel),getResources().getString(R.string.dialog_btn_confim), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    alertDialog.setDismissFalse(true);
+                }
+            }, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    HekrUserAction.getInstance(DeviceListActivity.this).cancelOAuth(deviceBean.getCtrlKey(), CCPAppManager.getClientUser().getId(), new HekrUser.CancelOAuthListener() {
+                        @Override
+                        public void CancelOAuthSuccess() {
+                            deviceDao.deleteByDeviceId(deviceBean.getDevTid());
+                            datalist = deviceDao.findAllDeviceBeanByFolderId(folderBean.getFolderId());
+                            deviceAdapter.Refresh(datalist);
+                            if(datalist.size()==0){
+                                swipeRefreshLayout.setVisibility(View.GONE);
+                                swipeRefreshLayout_em.setVisibility(View.VISIBLE);
+                            }else{
+                                swipeRefreshLayout.setVisibility(View.VISIBLE);
+                                swipeRefreshLayout_em.setVisibility(View.GONE);
+                            }
+                            Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.success_delete),Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void CancelOauthFail(int errorCode) {
+                            Toast.makeText(DeviceListActivity.this,Errcode.errorCode2Msg(DeviceListActivity.this,errorCode),Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+            alertDialog.show();
+        }else{
+            String thing = String.format(getResources().getString(R.string.unbind_hint),deviceBean.getDeviceName());
+            alertDialog = ECAlertDialog.buildAlert(DeviceListActivity.this, thing,getResources().getString(R.string.dialog_btn_cancel),getResources().getString(R.string.dialog_btn_confim), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    alertDialog.setDismissFalse(true);
+                }
+            }, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    HekrUserAction.getInstance(DeviceListActivity.this).deleteDevice(deviceBean.getDevTid(), deviceBean.getBindKey(), new HekrUser.DeleteDeviceListener() {
+                        @Override
+                        public void deleteDeviceSuccess() {
+                            deviceDao.deleteByDeviceId(deviceBean.getDevTid());
+                            datalist = deviceDao.findAllDeviceBeanByFolderId(folderBean.getFolderId());
+                            deviceAdapter.Refresh(datalist);
+                            if(datalist.size()==0){
+                                swipeRefreshLayout.setVisibility(View.GONE);
+                                swipeRefreshLayout_em.setVisibility(View.VISIBLE);
+                            }else{
+                                swipeRefreshLayout.setVisibility(View.VISIBLE);
+                                swipeRefreshLayout_em.setVisibility(View.GONE);
+                            }
+                            Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.success_delete),Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void deleteDeviceFail(int errorCode) {
+                            Toast.makeText(DeviceListActivity.this,Errcode.errorCode2Msg(DeviceListActivity.this,errorCode),Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+            alertDialog.show();
+        }
+    }
+
+    private void moveDevice(final DeviceBean deviceBean){
+        final List<LocalFolderBean> list = folderDao.findAllFolders();
+        List<String> slit = new ArrayList<String>();
+        for(int i=0;i<list.size();i++){
+            String ds = getResources().getString(R.string.root);
+            if(!"root".equals(list.get(i).getFolderName())){
+                ds = list.get(i).getFolderName();
+            }
+            slit.add(ds);
+        }
+        ECListDialog ecListDialog1 = new ECListDialog(DeviceListActivity.this, slit);
+        ecListDialog1.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+            @Override
+            public void onDialogItemClick(Dialog d,final int position) {
+
+
+                HekrUserAction.getInstance(DeviceListActivity.this).devicesPutFolder(list.get(position).getFolderId(), deviceBean.getCtrlKey(), deviceBean.getDevTid(), new HekrUser.DevicePutFolderListener() {
+                    @Override
+                    public void putSuccess() {
+                        DeviceBean deviceBean1 = new DeviceBean();
+                        deviceBean1.setDevTid(deviceBean.getDevTid());
+                        deviceBean1.setFolderId(list.get(position).getFolderId());
+                        deviceDao.updateDeviceFolderid(deviceBean1);
+                        Toast.makeText(DeviceListActivity.this,getResources().getString(R.string.success_move),Toast.LENGTH_LONG).show();
+                        datalist = deviceDao.findAllDeviceBeanByFolderId(folderBean.getFolderId());
+                        deviceAdapter.Refresh(datalist);
+
+                        if(datalist.size()==0){
+                            swipeRefreshLayout.setVisibility(View.GONE);
+                            swipeRefreshLayout_em.setVisibility(View.VISIBLE);
+                        }else{
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                            swipeRefreshLayout_em.setVisibility(View.GONE);
+                        }
+
+                    }
+
+                    @Override
+                    public void putFail(int errorCode) {
+
+                        Log.i(TAG,"putFail()");
+                    }
+                });
 
             }
         });
-        ecListDialog.show();
+        ecListDialog1.setTitle(getResources().getString(R.string.all_folders));
+        ecListDialog1.show();
     }
-
 
     @Override
     protected void onDestroy() {

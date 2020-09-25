@@ -69,7 +69,8 @@
                 android:src="@drawable/arrow"
                 android:id="@+id/cellScenceForward"
                 android:layout_width="@dimen/modle_item_arrow_width"
-                android:layout_height="@dimen/modle_item_arrow_height" />
+                android:layout_height="@dimen/modle_item_arrow_height"
+                android:layout_marginRight="10dp"/>
         </LinearLayout>
    </LinearLayout>
     <ImageView

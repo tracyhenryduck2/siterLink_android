@@ -6,14 +6,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.siterwell.application.common.CCPAppManager;
 import com.siterwell.application.common.ECPreferenceSettings;
 import com.siterwell.application.common.ECPreferences;
+import com.siterwell.application.common.StatusBarUtil;
 import com.siterwell.sdk.http.HekrUserAction;
 import com.siterwell.sdk.http.bean.UserBean;
 
@@ -28,50 +29,37 @@ import me.hekr.sdk.utils.CacheUtil;
 /**
  * Created by TracyHenry on 2018/5/9.
  */
+public class InitActivity extends AppCompatActivity {
 
-public class InitActivity extends BaseActivity {
-private final static String TAG = "InitActivity";
-private ImageView imageView1;
+    private final static String TAG = "InitActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
         setContentView(R.layout.activity_init);
-        login();
-        handler.sendEmptyMessageDelayed(1,3000l);
-
+        StatusBarUtil.setTransparent(this);
+        StatusBarUtil.setLightMode(this);
+        if (TextUtils.isEmpty(HekrUserAction.getInstance(this).getJWT_TOKEN())) {
+            handler.sendEmptyMessage(2);
+        } else {
+            toLoginIn();
+        }
     }
 
-    private String getUsername(){
-
-        SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
-        ECPreferenceSettings flag = ECPreferenceSettings.SETTINGS_USERNAME;
-        String autoflag = sharedPreferences.getString(flag.getId(), (String) flag.getDefaultValue());
-        return autoflag;
-    }
-
-    private String getPassword(){
-
-        SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
-        ECPreferenceSettings flag = ECPreferenceSettings.SETTINGS_PASSWORD;
-        String autoflag = sharedPreferences.getString(flag.getId(), (String) flag.getDefaultValue());
-        return autoflag;
-    }
-
-    private void login(){
-
+    private void toLoginIn(){
        Log.i(TAG,"自动登录");
-        Hekr.getHekrUser().login(getUsername(), getPassword(), new HekrCallback() {
+       Hekr.getHekrUser().login(getUsername(), getPassword(), new HekrCallback() {
             @Override
             public void onSuccess() {
                 Log.i(TAG,"自动登录成功");
                 UserBean userBean = new UserBean(getUsername(), getPassword(), CacheUtil.getUserToken(), CacheUtil.getString(Constants.REFRESH_TOKEN,""));
                 HekrUserAction.getInstance(InitActivity.this).setUserCache(userBean);
-
+                handler.sendEmptyMessageDelayed(1, 2000);
             }
 
             @Override
             public void onError(int errorCode, String message) {
-
                 try {
                     JSONObject d = JSON.parseObject(message);
                     int code = d.getInteger("code");
@@ -84,41 +72,44 @@ private ImageView imageView1;
                         }
                         HekrUserAction.getInstance(InitActivity.this).userLogout();
                         CCPAppManager.setClientUser(null);
-                        handler.sendEmptyMessage(2);
-                    }else {
-
                     }
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.i(TAG,"自动登录失败");
-                    handler.sendEmptyMessage(1);
                 }
-
-
+                handler.sendEmptyMessage(2);
             }
         });
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private String getUsername(){
+        SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
+        ECPreferenceSettings flag = ECPreferenceSettings.SETTINGS_USERNAME;
+        return sharedPreferences.getString(flag.getId(), (String) flag.getDefaultValue());
     }
 
-    Handler handler = new Handler() {
+    private String getPassword(){
+        SharedPreferences sharedPreferences = ECPreferences.getSharedPreferences();
+        ECPreferenceSettings flag = ECPreferenceSettings.SETTINGS_PASSWORD;
+        return sharedPreferences.getString(flag.getId(), (String) flag.getDefaultValue());
+    }
+
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-
-                    startActivity(new Intent(InitActivity.this,MainActivity.class));
+                    startActivity(new Intent(InitActivity.this, MainActivity.class));
                     finish();
+                    handler.removeMessages(1);
                     break;
                 case 2:
-                    startActivity(new Intent(InitActivity.this,LoginActivity.class));
+                    startActivity(new Intent(InitActivity.this, LoginActivity.class));
                     finish();
+                    handler.removeMessages(2);
                     break;
             }
+            return false;
         }
-    };
+    });
 }

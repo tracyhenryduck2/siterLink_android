@@ -1,9 +1,9 @@
 package com.siterwell.application.folder;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -13,8 +13,9 @@ import com.siterwell.application.R;
 import com.siterwell.application.common.Errcode;
 import com.siterwell.application.common.PermissionUtils;
 import com.siterwell.application.common.TopbarSuperActivity;
+import com.siterwell.application.common.UnitTools;
+import com.siterwell.application.commonview.BaseDialog;
 import com.siterwell.application.commonview.BottomListDialog;
-import com.siterwell.application.commonview.ECAlertDialog;
 import com.siterwell.application.commonview.ProgressDialog;
 import com.siterwell.application.folder.configuration.ConfigurationActivity;
 import com.siterwell.application.folder.guide.GuideBattery1Activty;
@@ -33,14 +34,17 @@ import java.util.List;
  */
 
 public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.OnClickListener {
-    private RelativeLayout wificonfig_linear;
-    private RelativeLayout scanconfig_linear;
     private ProgressDialog progressDialog;
     private DeviceDao deviceDao;
     private int page = 0;
     private List<DeviceBean> deviceBeanList;
-    private static final int REQUEST_CAMERA=1001;
-    private String[] permission = new String[]{Manifest.permission.CAMERA};
+
+    private static final int REQUEST_LOCATION = 1000;
+    private static final int REQUEST_CAMERA = 1001;
+    private static final  int REQUEST_LOCATION_SERVICE = 1002;
+
+    private String[] permission1 = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+    private String[] permission2 = new String[]{Manifest.permission.CAMERA};
 
     @Override
     protected void onCreateInit() {
@@ -53,12 +57,12 @@ public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.O
     }
 
     private void initView(){
-        wificonfig_linear = (RelativeLayout)findViewById(R.id.wifi_btn);
-        scanconfig_linear = (RelativeLayout)findViewById(R.id.scan_btn);
-        wificonfig_linear.setOnClickListener(this);
-        scanconfig_linear.setOnClickListener(this);
+        RelativeLayout wifi_config_linear = findViewById(R.id.wifi_btn);
+        RelativeLayout scan_config_linear = findViewById(R.id.scan_btn);
+        wifi_config_linear.setOnClickListener(this);
+        scan_config_linear.setOnClickListener(this);
         deviceDao = new DeviceDao(this);
-        deviceBeanList = new ArrayList<DeviceBean>();
+        deviceBeanList = new ArrayList<>();
         getTopBarView().setTopBarStatus(R.drawable.back, -1, getResources().getString(R.string.add_device), 1, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,10 +76,16 @@ public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.O
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.wifi_btn:
-                showTypeList();
+                if(PermissionUtils.requestPermission(this, permission1, REQUEST_LOCATION)){
+                    if(UnitTools.isLocServiceEnable(this)){
+                        showTypeList();
+                    }else {
+                        getLocalService();
+                    }
+                }
                 break;
             case R.id.scan_btn:
-                if(PermissionUtils.requestPermission(this,permission,REQUEST_CAMERA)){
+                if(PermissionUtils.requestPermission(this, permission2, REQUEST_CAMERA)){
                     startActivityForResult(new Intent(this, ScanCaptureAct.class),1);
                 }
                 break;
@@ -117,16 +127,13 @@ public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.O
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode!=RESULT_OK) return;
-
-        if(requestCode==1){
-
+        if(requestCode == 1){
             String sn = data.getExtras().getString("SCAN_RESULT");
             progressDialog = new ProgressDialog(this,R.string.wait);
             progressDialog.show();
             HekrUserAction.getInstance(this).registerAuth(sn, new HekrUser.RegisterOAuthQRCodeListener() {
                 @Override
                 public void registerSuccess() {
-                    //Toast.makeText(AddDeviceTypeActivity.this,"CHENGG",Toast.LENGTH_LONG).show();
                     page = 0;
                     getDeviceList();
                 }
@@ -139,7 +146,6 @@ public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.O
                     Toast.makeText(AddDeviceTypeActivity.this, Errcode.errorCode2Msg(AddDeviceTypeActivity.this,errorCode),Toast.LENGTH_SHORT).show();
                 }
             });
-
         }
     }
 
@@ -160,8 +166,6 @@ public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.O
 
                     moveDeviceToFold();
                 }
-
-
             }
 
             @Override
@@ -212,26 +216,69 @@ public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.O
         });
     }
 
+    private void getLocalService(){
+        BaseDialog mDialog = new BaseDialog(this, new BaseDialog.OnCallBackToRefresh() {
+            @Override
+            public void onConfirm() {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(intent, REQUEST_LOCATION_SERVICE);
+            }
+
+            @Override
+            public void onCancel() {
+                finish();
+            }
+        });
+        mDialog.setTitleAndButton(getString(R.string.permission_reject_location_service_tip), getString(R.string.dialog_cancel), getString(R.string.goto_set));
+        mDialog.show();
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA) {
-            if (permissions != null && grantResults != null &&
-                    permissions.length == grantResults.length) {
+        if (requestCode == REQUEST_LOCATION) {
+            if (permissions.length == grantResults.length) {
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        if(!UnitTools.isLocServiceEnable(this)){
+                            getLocalService();
+                        }
+                    }else {
+                        BaseDialog mDialog = new BaseDialog(this, new BaseDialog.OnCallBackToRefresh() {
+                            @Override
+                            public void onConfirm() {
+                                PermissionUtils.startToSetting(AddDeviceTypeActivity.this);
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                finish();
+                            }
+                        });
+                        mDialog.setTitleAndButton(getString(R.string.permission_reject_location_tip), getString(R.string.dialog_cancel), getString(R.string.goto_set));
+                        mDialog.show();
+                    }
+                }
+            }
+        }else if (requestCode == REQUEST_CAMERA) {
+            if (permissions.length == grantResults.length) {
                 for (int i = 0; i < permissions.length; i++) {
                     if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                         startActivityForResult(new Intent(this, ScanCaptureAct.class),1);
                     } else {
-                        DialogInterface.OnClickListener listener=new DialogInterface.OnClickListener() {
+                        BaseDialog mDialog = new BaseDialog(this, new BaseDialog.OnCallBackToRefresh() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                            public void onConfirm() {
                                 PermissionUtils.startToSetting(AddDeviceTypeActivity.this);
                             }
-                        };
-                        ECAlertDialog ecAlertDialog = ECAlertDialog.buildAlert(AddDeviceTypeActivity.this,getResources().getString(R.string.permission_reject_camera_tip),listener);
-                        ecAlertDialog.setTitle(getResources().getString(R.string.permission_register));
-                        ecAlertDialog.setButton(ECAlertDialog.BUTTON_POSITIVE,getResources().getString(R.string.goto_set),listener);
-                        ecAlertDialog.show();
+
+                            @Override
+                            public void onCancel() {
+                                finish();
+                            }
+                        });
+                        mDialog.setTitleAndButton(getString(R.string.permission_reject_camera_tip), getString(R.string.dialog_cancel), getString(R.string.goto_set));
+                        mDialog.show();
                     }
                 }
             }
