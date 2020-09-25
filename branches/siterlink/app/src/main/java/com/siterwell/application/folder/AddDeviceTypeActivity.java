@@ -1,7 +1,6 @@
 package com.siterwell.application.folder;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,8 +13,8 @@ import com.siterwell.application.R;
 import com.siterwell.application.common.Errcode;
 import com.siterwell.application.common.PermissionUtils;
 import com.siterwell.application.common.TopbarSuperActivity;
+import com.siterwell.application.commonview.BottomListDialog;
 import com.siterwell.application.commonview.ECAlertDialog;
-import com.siterwell.application.commonview.ECListDialog;
 import com.siterwell.application.commonview.ProgressDialog;
 import com.siterwell.application.folder.configuration.ConfigurationActivity;
 import com.siterwell.application.folder.guide.GuideBattery1Activty;
@@ -84,18 +83,11 @@ public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.O
     }
 
     private void showTypeList(){
-        String[] ds = new String[]{
-                getResources().getString(R.string.battery),
-                getResources().getString(R.string.socket),
-                getResources().getString(R.string.watersensor)
-        };
-        ECListDialog ecListDialog = new ECListDialog(this,ds);
-        ecListDialog.setTitle(getResources().getString(R.string.choose_device_type));
-        ecListDialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
+        String[] title = new String[]{ getString(R.string.battery), getString(R.string.socket), getString(R.string.watersensor)};
+        BottomListDialog mDialog = new BottomListDialog(this, new BottomListDialog.onCallBack() {
             @Override
-            public void onDialogItemClick(Dialog d, int position) {
-
-                switch (position){
+            public void callBack(int i) {
+                switch (i) {
                     case 0:
                         startActivity(new Intent(AddDeviceTypeActivity.this, GuideBattery1Activty.class));
                         finish();
@@ -107,7 +99,7 @@ public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.O
                         finish();
                         break;
                     case 2:
-                        Intent intent2 = new Intent(AddDeviceTypeActivity.this,ConfigurationActivity.class);
+                        Intent intent2 = new Intent(AddDeviceTypeActivity.this, ConfigurationActivity.class);
                         intent2.putExtra("devicetype", DeviceType.WATERSENEOR.toString());
                         startActivity(intent2);
                         finish();
@@ -115,10 +107,10 @@ public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.O
                     default:
                         break;
                 }
-
             }
         });
-        ecListDialog.show();
+        mDialog.setMsg(title);
+        mDialog.show();
     }
 
     @Override

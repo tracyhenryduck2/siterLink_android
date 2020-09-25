@@ -37,7 +37,7 @@ private ImageView imageView1;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_init);
         login();
-        handler.sendEmptyMessageDelayed(1,5000l);
+        handler.sendEmptyMessageDelayed(1,3000l);
 
     }
 

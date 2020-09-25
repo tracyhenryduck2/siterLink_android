@@ -73,12 +73,12 @@ public abstract class TopbarSuperActivity extends AppCompatActivity {
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swip);
         if(swipeRefreshLayout!=null){
             //调整SwipeRefreshLayout的位置
-            swipeRefreshLayout.setColorSchemeResources(R.color.bar_bg);
+            swipeRefreshLayout.setColorSchemeResources(R.color.edit_color);
             swipeRefreshLayout.setProgressViewOffset(false, 0,  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
             swipeRefreshLayout_em = (SwipeRefreshLayout) LayoutInflater.from(this).inflate(R.layout.empty_view, null);
             ((ViewGroup)swipeRefreshLayout.getParent()).addView(swipeRefreshLayout_em);
             //调整SwipeRefreshLayout的位置
-            swipeRefreshLayout_em.setColorSchemeResources(R.color.bar_bg);
+            swipeRefreshLayout_em.setColorSchemeResources(R.color.edit_color);
             swipeRefreshLayout_em.setProgressViewOffset(false, 0,  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
         }
 

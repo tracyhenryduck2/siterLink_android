@@ -89,7 +89,12 @@ public class AddFolderActivity extends TopbarSuperActivity implements View.OnCli
                 editText.setText(foldernames[i]+(t+1));
             }
         });
-
+        findViewById(R.id.layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideSoftKeyboard();
+            }
+        });
     }
 
     private void initdata(){

@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -69,7 +68,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.hekr.sdk.Hekr;
-import me.hekr.sdk.HekrSDK;
 import me.hekr.sdk.inter.HekrCallback;
 import me.hekr.sdk.utils.ErrorCodeUtil;
 
@@ -82,28 +80,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
     private final String TAG ="MainActivity";
     private SlidingMenu mMenu;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private GridLayoutManager mLayoutManager;
-    private EmRecylerView recyclerView;
     private HomeAdapter mAdapter;
     private List<LocalFolderBean> folderBeanList;
-    private RelativeLayout lay_personal_setting;
-    private RelativeLayout lay_warn_list;
-    private RelativeLayout lay_system_setting, lay_learned;
     private ECAlertDialog alertDialog;
 
     private FolderDao folderDao;
     private SwipeRefreshLayout swipeRefreshLayout_em;
     private ImageView img_menu,img_add;
     private TextView username;
-    private Button logout;
-    private UpdateAppAuto updateAppAuto;
     private int flag_update = 0;
     private ProgressDialog mProgressDialog;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
-        if(Controller.getInstance().flag_service==false) {
+        if(!Controller.getInstance().flag_service) {
             Controller.getInstance().flag_service = true;
             Intent intent = new Intent(MainActivity.this, SychronizeService.class);
             startService(intent);
@@ -216,7 +207,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
                               if(TextUtils.isEmpty(fcmtoken)) {
                                   handler.sendEmptyMessageDelayed(2, 1000);
                               }else{
-
+                                  assert fcmtoken != null;
                                   HekrUserAction.getInstance(this).unPushTagBind(fcmtoken, 3, new HekrUser.UnPushTagBindListener() {
                                       @Override
                                       public void unPushTagBindSuccess() {
@@ -240,21 +231,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
                   default:
                       break;
               }
-
     }
 
     private void initView(){
         folderDao = new FolderDao(this);
         img_menu = (ImageView)findViewById(R.id.left_img);
         img_add  = (ImageView)findViewById(R.id.right_img);
-        lay_personal_setting = (RelativeLayout)findViewById(R.id.person);
+        RelativeLayout lay_personal_setting = (RelativeLayout) findViewById(R.id.person);
         lay_personal_setting.setOnClickListener(this);
-        lay_warn_list = (RelativeLayout)findViewById(R.id.warn_list);
+        RelativeLayout lay_warn_list = (RelativeLayout) findViewById(R.id.warn_list);
         lay_warn_list.setOnClickListener(this);
-        lay_system_setting = (RelativeLayout)findViewById(R.id.system_setting);
+        RelativeLayout lay_system_setting = (RelativeLayout) findViewById(R.id.system_setting);
         lay_system_setting.setOnClickListener(this);
 
-        lay_learned = (RelativeLayout)findViewById(R.id.learned);
+        RelativeLayout lay_learned = (RelativeLayout) findViewById(R.id.learned);
         lay_learned.setOnClickListener(this);
 
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.grid_swipe_refresh);
@@ -263,10 +253,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
         swipeRefreshLayout.setProgressViewOffset(false, 0,  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
         mMenu = (SlidingMenu) findViewById(R.id.id_menu);
         username = (TextView)findViewById(R.id.admin);
-        logout = (Button)findViewById(R.id.logout);
-        recyclerView = (EmRecylerView)findViewById(R.id.id_recyclerview);
+        Button logout = (Button) findViewById(R.id.logout);
+        EmRecylerView recyclerView = (EmRecylerView) findViewById(R.id.id_recyclerview);
         //Empty_view = findViewById(R.id.id_empty_view);
-        mLayoutManager=new GridLayoutManager(this,2,GridLayoutManager.VERTICAL,false);
+        GridLayoutManager mLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
         folderBeanList = folderDao.findAllFolders();
         mAdapter = new HomeAdapter(this,folderBeanList);
         mAdapter.setOnItemClickListener(this);
@@ -286,20 +276,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
             swipeRefreshLayout.setVisibility(View.VISIBLE);
             swipeRefreshLayout_em.setVisibility(View.GONE);
         }
-        updateAppAuto = new UpdateAppAuto(this);
+        UpdateAppAuto updateAppAuto = new UpdateAppAuto(this);
         updateAppAuto.getUpdateInfo();
         setListener();
     }
 
     private void setListener(){
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getFolderInfo();
             }
         });
-
         swipeRefreshLayout_em.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -313,19 +301,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
         }else{
             username.setText(CCPAppManager.getClientUser().getPhoneNumber());
         }
-
     }
-
-
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initGTService() {
-
-
-
-
-
-
             String fcmclientid = FirebaseInstanceId.getInstance().getToken();
             if(!TextUtils.isEmpty(fcmclientid)){
                 Log.i(TAG,"FCM平台CLIENTID："+fcmclientid);
@@ -333,16 +312,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
                     stEvent.setType(3);
                     stEvent.setToken(fcmclientid);
                     EventBus.getDefault().post(stEvent);
-
-
-
             }else{
-
                 if( "honor".equals(SystemUtil.getDeviceBrand().toLowerCase()) || "huawei".equals(SystemUtil.getDeviceBrand().toLowerCase())){
-
                     com.huawei.android.pushagent.api.PushManager.requestToken(this);
-                }
-                else if("xiaomi".equals(SystemUtil.getDeviceBrand().toLowerCase())){
+                }else if("xiaomi".equals(SystemUtil.getDeviceBrand().toLowerCase())){
                     String ds = MiPushClient.getRegId(this);
                     Log.i(TAG,"小米平台CLIENTID："+ds);
                     if(!TextUtils.isEmpty(ds)) {
@@ -354,11 +327,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
                         Log.i(TAG, "小米平台CLIENTID为空");
                     }
                 }
-
         }
-
-
-
     }
 
 
@@ -371,16 +340,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
 
     @Override
     public void onItemLongClick(View view,final LocalFolderBean deviceBean) {
-
-
-
-
         ECListDialog ecListDialog = new ECListDialog(this,getResources().getStringArray(R.array.folder_operation));
         ecListDialog.setTitle(deviceBean.getFolderName());
         ecListDialog.setOnDialogItemClickListener(new ECListDialog.OnDialogItemClickListener() {
             @Override
             public void onDialogItemClick(Dialog d, int position) {
-
                 switch (position){
                     case 0:
                         alertDialog = ECAlertDialog.buildAlert(MainActivity.this, getResources().getString(R.string.update_name),getResources().getString(R.string.dialog_btn_cancel),getResources().getString(R.string.dialog_btn_confim), new DialogInterface.OnClickListener() {
@@ -470,12 +434,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
                     default:
                         break;
                 }
-
             }
         });
         ecListDialog.show();
-
-
     }
 
     @Override
@@ -487,7 +448,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
         }else{
             getFolderInfo();
         }
-
     }
 
     private void getFolderInfo(){
@@ -615,9 +575,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
         wifiTimerDao.reset();
     }
 
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
                     mMenu.close2Menu();
@@ -646,35 +606,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,H
                         @Override
                         public void onError(int errorCode, String message) {
                             hideProgressDialog();
-                           if(errorCode == 1){
-                               try {
-                                   ECPreferences.savePreference(ECPreferenceSettings.SETTINGS_HUAWEI_TOKEN, "", true);
-                               } catch (InvalidClassException e) {
-                                   e.printStackTrace();
-                               }
-                               ErrorCodeUtil.getErrorDesc(errorCode);
-                               Controller.getInstance().flag_service = false;
-                               resetStorage();
-                               HekrUserAction.getInstance(MainActivity.this).userLogout();
-                               stopService(new Intent(MainActivity.this, SychronizeService.class));
-                               startActivity(new Intent(MainActivity.this,LoginActivity.class));
-                               finish();
-                           }else{
-                               try {
-                                   com.alibaba.fastjson.JSONObject d = JSON.parseObject(message);
-                                   int code = d.getInteger("code");
-                                   Toast.makeText(MainActivity.this,Errcode.errorCode2Msg(MainActivity.this,code),Toast.LENGTH_LONG).show();
-                               }catch (Exception e){
-                                   e.printStackTrace();
-                                   Toast.makeText(MainActivity.this,Errcode.errorCode2Msg(MainActivity.this,errorCode),Toast.LENGTH_LONG).show();
-                               }
-                           }
+                            if(errorCode == 1){
+                                try {
+                                    ECPreferences.savePreference(ECPreferenceSettings.SETTINGS_HUAWEI_TOKEN, "", true);
+                                } catch (InvalidClassException e) {
+                                    e.printStackTrace();
+                                }
+                                ErrorCodeUtil.getErrorDesc(errorCode);
+                                Controller.getInstance().flag_service = false;
+                                resetStorage();
+                                HekrUserAction.getInstance(MainActivity.this).userLogout();
+                                stopService(new Intent(MainActivity.this, SychronizeService.class));
+                                startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                                finish();
+                            }else{
+                                try {
+                                    com.alibaba.fastjson.JSONObject d = JSON.parseObject(message);
+                                    int code = d.getInteger("code");
+                                    Toast.makeText(MainActivity.this,Errcode.errorCode2Msg(MainActivity.this,code),Toast.LENGTH_LONG).show();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                    Toast.makeText(MainActivity.this,Errcode.errorCode2Msg(MainActivity.this,errorCode),Toast.LENGTH_LONG).show();
+                                }
+                            }
                         }
                     });
                     break;
             }
+            return false;
         }
-    };
+    });
 
 
     @Subscribe          //订阅事件FirstEvent
