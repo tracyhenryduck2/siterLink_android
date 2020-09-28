@@ -360,4 +360,12 @@
    <string name="goto_set">Deformer</string>
     <string name="help">Aider</string>
    <string name="open_notification">Si vous n ’ouvrez pas les droits de la barre de notification de l’ APP, vous ne pourrez pas recevoir le message de poussée</string>
+    <string name="user_agreement">Protocole utilisateur</string>
+   <string name="privacy_policy">Politique de la vie privée</string>
+    <string name="agree">D’accord.</string>
+   <string name="refuse">Refuser</string>
+   <string name="login_protocol">\t\t\t\tIl est important que vous lisiez attentivement et compreniez bien les dispositions de l ’accord utilisateur et de la politique de protection de la vie privée, y compris, mais non exclusivement, la nécessité de recueillir des informations sur votre équipement, votre journal d’ exploitation, etc.Veuillez lire attentivement le 《Protocole utilisateur》 et 《Politique de la vie privée》 de la vie privée.Si vous êtes d ’accord, cliquez sur ”oui” pour commencer à utiliser nos services.</string>
+   <string name="login_protocol_1">《Protocole utilisateur》</string>
+   <string name="login_protocol_3">《Politique de la vie privée》</string>
+   <string name="login_protocol_2">Créer un compte signifie que vous approuvez le《Protocole utilisateur》et《Politique de la vie privée》</string>
 </resources>

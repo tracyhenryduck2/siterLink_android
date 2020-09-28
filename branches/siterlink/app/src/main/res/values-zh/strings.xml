@@ -360,4 +360,12 @@
    <string name="goto_set">去设置</string>
    <string name="help">帮助</string>
    <string name="open_notification">您没有开启App的通知栏权限，将无法收到推送消息，请跳转到设置界面打开权限</string>
+    <string name="user_agreement">用户协议</string>
+    <string name="privacy_policy">隐私政策</string>
+   <string name="agree">同意</string>
+   <string name="refuse">拒绝</string>
+   <string name="login_protocol">\t\t\t\t请你务必审慎阅读、充分理解”用户协议”和”隐私政策”各条款，包括但不限于：为了想你提供即时通讯，智能设备数据推送等服务，我们需要收集你的设备信息，操作日志等信息。请仔细阅读《用户协议》和《隐私政策》了解详细信息。如你同意，请点击”同意”开始使用我们的服务。</string>
+   <string name="login_protocol_1">《用户协议》</string>
+   <string name="login_protocol_3">《隐私政策》</string>
+   <string name="login_protocol_2">请确认已仔细阅读《用户协议》、《隐私政策》</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.siterwell.application;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.DialogInterface;
@@ -268,17 +269,14 @@ public class SychronizeService extends Service implements RefreshBatteryListener
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void AlertShow(int alarm,String deviceid){
-
+        Log.i(TAG, "RefreshBattery: BBB");
         //若是0代表正常，不弹框;
         if(alarm == 0) return;
-
+        Log.i(TAG, "RefreshBattery: CCC");
         if(!UnitTools.isApplicationBroughtToBackground(this)){
             try {
                 DeviceDao deviceDao = new DeviceDao(this);
                 BatteryDescBean batteryBean = deviceDao.findBatteryBySid(deviceid);
-
-                String ds = getResources().getString(R.string.warning_alert);
-
                 String ttt1;
                 if(TextUtils.isEmpty(batteryBean.getDeviceName())){
                     if(DeviceType.BATTERY.toString().equals(batteryBean.getModel())){
@@ -294,23 +292,20 @@ public class SychronizeService extends Service implements RefreshBatteryListener
                     ttt1 = batteryBean.getDeviceName();
                 }
 
-
-
-                String title = String.format(ds,ttt1,batteryBean.getStatusDtail(alarm));
+                @SuppressLint({"StringFormatInvalid", "LocalSuppress"})
+                String title = String.format(getString(R.string.warning_alert), ttt1, batteryBean.getStatusDtail(alarm));
                 if(ecAlertDialog==null||!ecAlertDialog.isShowing()){
-                    ecAlertDialog = ECAlertDialog.buildAlert(MyApplication.getActivity(),
-                            title,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        UnitTools.stopMusic(SychronizeService.this);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
+                    ecAlertDialog = ECAlertDialog.buildAlert(MyApplication.getActivity(), title, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                UnitTools.stopMusic(SychronizeService.this);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-                            });
+                    });
                     ecAlertDialog.setCancelable(false);
                     ecAlertDialog.setCanceledOnTouchOutside(false);
                     ecAlertDialog.show();
@@ -331,6 +326,7 @@ public class SychronizeService extends Service implements RefreshBatteryListener
 
     @Override
     public void RefreshBattery(BatteryBean batteryBean) {
+        Log.i(TAG, "RefreshBattery: AAA");
         BatteryDescBean batteryDescBean1 = new BatteryDescBean();
         batteryDescBean1.setDevTid(batteryBean.getDevTid());
         batteryDescBean1.setStatus(batteryBean.getStatus());

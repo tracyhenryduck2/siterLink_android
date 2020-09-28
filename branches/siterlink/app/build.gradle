@@ -5,7 +5,7 @@ android {
     defaultConfig {
         applicationId "com.siterwell.siterlink"
         minSdkVersion 16
-        versionCode 1260
+        versionCode 1261
         versionName "1.2.61"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [

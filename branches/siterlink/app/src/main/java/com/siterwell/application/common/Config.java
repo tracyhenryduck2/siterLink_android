@@ -20,13 +20,14 @@ public class Config {
 	private static final String TAG = "Config";
 
 	public final static String RootPath = "61.164.94.198:1415/app";
-	public final static String ApkVerUrl = "http://" + RootPath
-			+ "/SiterLink.ver";
-	public final static String ApkUrl = "http://" + RootPath
-			+ "/SiterLink.apk";
+	public final static String PushPath = "61.164.94.198:1415/SiterLink/";
+	public final static String PushUrl = "http://" + PushPath ;
+	public final static String ApkVerUrl = "http://" + RootPath + "/SiterLink.ver";
+	public final static String ApkUrl = "http://" + RootPath + "/SiterLink.apk";
 
 	public static final String UPDATE_APKNAME="Siterlink.apk";
-
+	public final static String PrivacyPolicyUrl = "file:///android_asset/register/";
+	public final static String UserProtocolUrl = "file:///android_asset/userProtocol/";
 
 	public static int getVerCode(Context context, String packageName) {
 		int verCode = -1;
@@ -52,27 +53,67 @@ public class Config {
 	}
 	
 	public static String getAppName(Context context) {
-		String verName = context.getResources()
-		.getText(R.string.app_name).toString();
-		return verName;
+		return context.getText(R.string.app_name).toString();
 	}
 
 	/**
 	 * 隐私政策网址
+	 */
+	public static String getPrivacyAgreement(Context context){
+		Locale locale = context.getResources().getConfiguration().locale;
+		String lan = locale.getLanguage();
+		switch (lan) {
+			case "zh":
+				return PrivacyPolicyUrl + "register_zh.html";
+			case "fr":
+				return PrivacyPolicyUrl + "register_fr.html";
+			case "de":
+				return PrivacyPolicyUrl + "register_de.html";
+			case "es":
+				return PrivacyPolicyUrl + "register_es.html";
+			case "en":
+			default:
+				return PrivacyPolicyUrl + "register_en.html";
+		}
+	}
+
+	/**
+	 * 用户协议网址
+	 */
+	public static String getUserProtocol(Context context){
+		Locale locale = context.getResources().getConfiguration().locale;
+		String lan = locale.getLanguage();
+		switch (lan) {
+			case "zh":
+				return UserProtocolUrl + "user_protocol_zh.html";
+			case "fr":
+				return UserProtocolUrl + "user_protocol_fr.html";
+			case "de":
+				return UserProtocolUrl + "user_protocol_de.html";
+			case "es":
+				return UserProtocolUrl + "user_protocol_es.html";
+			case "en":
+			default:
+				return UserProtocolUrl + "user_protocol_en.html";
+		}
+	}
+
+	/**
+	 * 手机推送设置
 	 */
 	public static String getPhonePushSetting(Context context){
 		Locale locale = context.getResources().getConfiguration().locale;
 		String lan = locale.getLanguage();
 		switch (lan) {
 			case "zh":
-				return "http://61.164.94.198:1415/SiterLink/zh/shezhi.html";
+				return PushUrl + "zh/shezhi.html";
 			case "fr":
-				return "http://61.164.94.198:1415/SiterLink/fr/shezhi.html";
+				return PushUrl + "fr/shezhi.html";
 			case "de":
-				return "http://61.164.94.198:1415/SiterLink/de/shezhi.html";
+				return PushUrl + "de/shezhi.html";
 			case "en":
 			default:
-				return "http://61.164.94.198:1415/SiterLink/en/shezhi.html";
+				return PushUrl + "en/shezhi.html";
 		}
 	}
 

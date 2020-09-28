@@ -240,7 +240,9 @@ public class AddDeviceTypeActivity extends TopbarSuperActivity implements View.O
             if (permissions.length == grantResults.length) {
                 for (int i = 0; i < permissions.length; i++) {
                     if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        if(!UnitTools.isLocServiceEnable(this)){
+                        if(UnitTools.isLocServiceEnable(this)){
+                            showTypeList();
+                        }else {
                             getLocalService();
                         }
                     }else {

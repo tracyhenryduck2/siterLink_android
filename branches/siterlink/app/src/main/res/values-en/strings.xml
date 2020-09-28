@@ -360,4 +360,12 @@
    <string name="goto_set">Setting</string>
     <string name="help">Help</string>
     <string name="open_notification">You do not have the permission to open the notification bar of the app. You will not be able to receive the push message. Please jump to the setting interface to open the permission</string>
+    <string name="user_agreement">User agreement</string>
+    <string name="privacy_policy">Privacy policy</string>
+    <string name="agree">Agree!</string>
+   <string name="refuse">Refuse</string>
+   <string name="login_protocol">\t\t\t\tPlease carefully read and fully understand the terms of ”user agreement” and ”privacy policy”, including but not limited to: in order to provide you with instant messaging, intelligent device data push and other services, we need to collect your device information, operation log and other information. Please read the 《user agreement》 and 《privacy policy》 for details. If you agree, please click ”agree” to start using our service.</string>
+   <string name="login_protocol_1">《user agreement》</string>
+   <string name="login_protocol_3">《privacy policy》</string>
+   <string name="login_protocol_2">By creating an account, you agree to《user agreement》and《privacy policy》</string>
 </resources>

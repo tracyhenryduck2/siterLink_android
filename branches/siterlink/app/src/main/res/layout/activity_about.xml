@@ -35,6 +35,20 @@
                     app:item_accessoryType="none"
                     app:item_showDivider="true"
                     app:item_titleText="@string/app_version_hint" />
+                <com.siterwell.application.commonview.SettingItem
+                    android:id="@+id/user_agreement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:item_accessoryType="arrow"
+                    app:item_showDivider="true"
+                    app:item_titleText="@string/user_agreement"/>
+                <com.siterwell.application.commonview.SettingItem
+                    android:id="@+id/privacy_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:item_accessoryType="arrow"
+                    app:item_showDivider="false"
+                    app:item_titleText="@string/privacy_policy" />
             </LinearLayout>
             <TextView
                 android:layout_width="match_parent"

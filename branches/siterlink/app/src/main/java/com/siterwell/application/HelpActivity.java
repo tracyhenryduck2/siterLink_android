@@ -19,17 +19,21 @@ import com.siterwell.application.common.TopbarSuperActivity;
 public class HelpActivity extends TopbarSuperActivity {
 
     private WebView webView;
+    private int type = 0;
+    private String mUrl;
+    private String mTitle;
 
     @Override
     protected void onCreateInit() {
-        getTopBarView().setTopBarStatus(R.drawable.back, -1, getString(R.string.help), 1, new View.OnClickListener() {
+        type = getIntent().getIntExtra("type", 0);
+        initView();
+        initData();
+        getTopBarView().setTopBarStatus(R.drawable.back, -1, mTitle, 1, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         },null, R.color.bar_bg);
-        initView();
-        initData();
     }
     @Override
     protected int getLayoutId() {
@@ -48,7 +52,20 @@ public class HelpActivity extends TopbarSuperActivity {
     }
 
     private void initData() {
-        String mUrl = Config.getPhonePushSetting(this);
+        switch (type){
+            case 0:
+                mTitle = getString(R.string.help);
+                mUrl = Config.getPhonePushSetting(this);
+                break;
+            case 1:
+                mTitle = getString(R.string.user_agreement);
+                mUrl = Config.getUserProtocol(this);
+                break;
+            case 2:
+                mTitle = getString(R.string.privacy_policy);
+                mUrl = Config.getPrivacyAgreement(this);
+                break;
+        }
         webView.loadUrl(mUrl);
     }
 }

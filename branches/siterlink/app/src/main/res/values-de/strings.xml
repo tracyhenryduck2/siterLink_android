@@ -360,4 +360,12 @@
    <string name="goto_set">Zur Einrichtung</string>
     <string name="help">Hilfe</string>
     <string name="open_notification">Sie haben nicht die Erlaubnis, die Anmeldeleiste der App zu öffnen. Sie werden nicht in der Lage sein, die Push-Nachricht zu erhalten.</string>
+    <string name="user_agreement">Zustimmung Benutzers</string>
+   <string name="privacy_policy">Privacy Policy</string>
+    <string name="agree">Einverstanden!</string>
+   <string name="refuse">Ablehnen</string>
+   <string name="login_protocol">\t\t\t\tBitte lesen und verstehen Sie die ”Nutzungsvereinbarung” und ”Datenschutzerklärung”, welche unter anderem folgendes einschließen: Um Ihnen Instant Messaging, intelligente Push-Nachrichten und andere Services bieten zu können, müssen wir Ihre Geräteinformationen, Betriebsprotokolle und andere Informationen sammeln. Bitte lesen Sie die 《Nutzungsvereinbarung》und die 《Datenschutzerklärung》 sorgfältig für weitere Details. Wenn Sie zustimmen, tippen Sie bitte auf ”zustimmen”, um unseren Dienst zu nutzen.</string>
+   <string name="login_protocol_1">《Nutzungsvereinbarung》</string>
+   <string name="login_protocol_3">《Datenschutzerklärung》</string>
+   <string name="login_protocol_2">Wenn Sie ein Konto erstellen, stimmen Sie der《Nutzungsvereinbarung》und der《Datenschutzerklärung》zu</string>
 </resources>

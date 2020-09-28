@@ -8,13 +8,16 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.siterwell.application.common.CCPAppManager;
 import com.siterwell.application.common.ECPreferenceSettings;
 import com.siterwell.application.common.ECPreferences;
+import com.siterwell.application.common.SharedUtil;
 import com.siterwell.application.common.StatusBarUtil;
+import com.siterwell.application.commonview.PrivacyPolicyDialog;
 import com.siterwell.sdk.http.HekrUserAction;
 import com.siterwell.sdk.http.bean.UserBean;
 
@@ -40,11 +43,45 @@ public class InitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_init);
         StatusBarUtil.setTransparent(this);
         StatusBarUtil.setLightMode(this);
+        checkUserAgreement();
+        findViewById(R.id.layout_root).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkUserAgreement();
+            }
+        });
+    }
+
+    private void checkUserAgreement() {
+        if (SharedUtil.getBoolean(this, "user_agreement")){
+            onLoginIn();
+        }else {
+            showUserAgreement();
+        }
+    }
+
+    private void onLoginIn(){
         if (TextUtils.isEmpty(HekrUserAction.getInstance(this).getJWT_TOKEN())) {
             handler.sendEmptyMessage(2);
         } else {
             toLoginIn();
         }
+    }
+
+    private void showUserAgreement() {
+        PrivacyPolicyDialog mDialog = new PrivacyPolicyDialog(this, new PrivacyPolicyDialog.OnCallBackToRefresh() {
+            @Override
+            public void onConfirm() {
+                SharedUtil.putBoolean(InitActivity.this, "user_agreement", true);
+                onLoginIn();
+            }
+
+            @Override
+            public void onCancel() {
+                SharedUtil.putBoolean(InitActivity.this, "user_agreement", false);
+            }
+        });
+        mDialog.show();
     }
 
     private void toLoginIn(){
