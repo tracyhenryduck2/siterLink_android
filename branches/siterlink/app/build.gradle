@@ -5,8 +5,8 @@ android {
     defaultConfig {
         applicationId "com.siterwell.siterlink"
         minSdkVersion 16
-        versionCode 1261
-        versionName "1.2.61"
+        versionCode 1262
+        versionName "1.2.62"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         manifestPlaceholders = [
                 GETUI_APP_ID    : "l4aSy2lRBq7p64QOL5nLA9",
@@ -14,7 +14,7 @@ android {
                 GETUI_APP_SECRET: "2aEVbUUDOF8ws9DenIPI55"
         ]
         ndk {
-            abiFilters  "armeabi-v7a", "arm64-v8a"
+            abiFilters  "armeabi", "arm64-v8a"
         }
         multiDexEnabled true
         targetSdkVersion 28
